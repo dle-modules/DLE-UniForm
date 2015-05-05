@@ -18,6 +18,9 @@ if (!defined('DATALIFEENGINE')) {
 // Подключаем конфиг модуля
 include ENGINE_DIR . '/modules/uniform/cfg.php';
 
+// Подключаем функции модуля
+include ENGINE_DIR . '/modules/uniform/functions.php';
+
 // Имя кеша
 $cacheName = md5(implode('_', $cfg));
 // ID сессии
@@ -39,13 +42,13 @@ if (!$uniform) {
 		define('TEMPLATE_DIR', $tpl->dir);
 	}
 
-	if (file_exists(TEMPLATE_DIR . '/' . $cfg['template'] . '.tpl')) {
+	if (file_exists(TEMPLATE_DIR . '/uniform/' . $cfg['templateFolder'] . '/form.tpl')) {
 		// Если файл шаблона существует — работаем.
 		$tpl->result['uniform'] = '';
-		$tpl->load_template($cfg['template'] . '.tpl');
-		
+		$tpl->load_template('uniform/' . $cfg['templateFolder'] . '/form.tpl');
+
 		// Пользовательские скрытые поля
-		$arHidden     = getArray($cfg['hidden']);
+		$arHidden = getArray($cfg['hidden']);
 
 		// Дебаг
 		$debug    = ($cfg['debug']) ? true : false;
@@ -74,7 +77,7 @@ if (!$uniform) {
 
 			// Если данные передаются постом — надо бы их обработать
 			require_once ENGINE_DIR . '/classes/parse.class.php';
-			$parse            = new ParseFilter();
+			$parse = new ParseFilter();
 			// $parse->safe_mode = true;
 
 			if (!checkToken($_POST['csrfToken'], $cacheName . $config['skin'] . $sessionId)) {
@@ -86,9 +89,30 @@ if (!$uniform) {
 				$tpl->set_block("'\\[uf_token_error\\](.*?)\\[/uf_token_error\\]'si", '');
 			}
 
+			// Определяем переменную для передачи в различные функции
+			$post = $mailPost = $_POST;
+			unset($post['csrfToken'], $post['formConfig'], $mailPost['csrfToken'], $mailPost['formConfig']);
+
 			// Получаем массив обязательных полей
 			$arRequired = getArray($cfg['required']);
 
+			// Получаем массив, содержащий поля-селекты
+			$arSelectFields = getArray($cfg['selectFields']);
+			// Проверяем условия для селектов
+			$post = setConditions($post, 'select', $arSelectFields, $tpl);
+
+			// Получаем массив, содержащий поля-чекбоксы
+			$arCheckboxFields = getArray($cfg['checkboxFields']);
+			// Проверяем условия для чекбоксов
+			$post = setConditions($post, 'checkbox', $arCheckboxFields, $tpl);
+
+			// Получаем массив, содержащий поля-радиокнопки
+			$arRadioFields = getArray($cfg['radioFields']);
+			// Проверяем условия для радиокнопок
+			$post = setConditions($post, 'radio', $arRadioFields, $tpl);
+
+			// Проверяем условия для простых полей
+			$post = setConditions($post, 'field', array(), $tpl);
 
 			// Проверяем обязательные поля
 			foreach ($_POST as $k => $val) {
@@ -97,10 +121,11 @@ if (!$uniform) {
 					continue;
 				}
 				// Остальные поля надо бы обработать
-				$val = convert_unicode($val, $config['charset']);
-				$val = $parse->process(trim($val));
-
-				$arSendMail[$k] = $val;
+				if (!is_array($val)) {
+					$val            = convert_unicode($val, $config['charset']);
+					$val            = $parse->process(trim($val));
+					$arSendMail[$k] = $val;
+				}
 
 				if (in_array($k, $arRequired) && ($val == '' || !isset($val))) {
 					// Если поле обязательное, но значение не установлено — значит произошла ошибка заполнения формы
@@ -112,9 +137,27 @@ if (!$uniform) {
 					// Удалем теги, которые не должны показываться
 					$tpl->copy_template = preg_replace("'\\[uf_error_{$k}\\](.*?)\\[/uf_error_{$k}\\]'is", '', $tpl->copy_template);
 				}
+
+				if (count($arSelectFields) > 0) {
+					// Назначаем обработку полей селектов и добавляем данные в массив для отправки на почту
+					$arSendMail = assignFiels($k, $val, 'select', $arSelectFields, $parse, $tpl, $arSendMail);
+					// setConditions($k, $val, 'select', $arSelectFields, $tpl);
+				}
+
+				if (count($arCheckboxFields) > 0) {
+					// Назначаем обработку полей чекбоксов и добавляем данные в массив для отправки на почту
+					$arSendMail = assignFiels($k, $val, 'checkbox', $arCheckboxFields, $parse, $tpl, $arSendMail);
+				}
+
+				if (count($arRadioFields) > 0) {
+					// Назначаем обработку полей чекбоксов и добавляем данные в массив для отправки на почту
+					$arSendMail = assignFiels($k, $val, 'radio', $arRadioFields, $parse, $tpl, $arSendMail);
+					// setConditions($k, $val, 'radio', $arRadioFields,  $tpl);
+				}
+
 				if ($k == 'email') {
 					if (in_array($k, $arRequired) && !validEmain($val)) {
-						// Проверем email, если это требуется (в настройках задано обязательное поле с именем email) 
+						// Проверем email, если это требуется (в настройках задано обязательное поле с именем email)
 						$error = true;
 						$tpl->set('[uf_email_error]', '');
 						$tpl->set('[/uf_email_error]', '');
@@ -122,8 +165,6 @@ if (!$uniform) {
 						$tpl->set_block("'\\[uf_email_error\\](.*?)\\[/uf_email_error\\]'si", '');
 					}
 				}
-
-
 
 				// Заполняем поля нужными данными
 				$tpl->copy_template = str_replace("{uf_field_{$k}}", $val, $tpl->copy_template);
@@ -158,8 +199,13 @@ if (!$uniform) {
 				$tpl->set('[/form]', '');
 				$tpl->set('[error]', '');
 				$tpl->set('[/error]', '');
+
+				if (condition) {
+					# code...
+				}
 			}
-			// Добавляем пользовательские скрытые поля			
+			$tpl->copy_template = preg_replace("'\\[uf_default_value\\](.*?)\\[/uf_default_value\\]'is", '', $tpl->copy_template);
+			// Добавляем пользовательские скрытые поля
 			$hiddenInputs = addHiddenFields($arHidden, $_POST);
 
 		} else {
@@ -169,20 +215,34 @@ if (!$uniform) {
 			$tpl->set_block("'\\[error\\](.*?)\\[/error\\]'si", '');
 			$tpl->set('[form]', '');
 			$tpl->set('[/form]', '');
+			$tpl->set('[uf_default_value]', '');
+			$tpl->set('[/uf_default_value]', '');
 
 			$tpl->copy_template = preg_replace("'\\{uf_field_(.*?)\\}'si", '', $tpl->copy_template);
 			$tpl->copy_template = preg_replace("'\\[uf_error_(.*?)\\](.*?)\\[/uf_error_(.*?)\\]'is", '', $tpl->copy_template);
-			
-			// Добавляем пользовательские скрытые поля			
+			$tpl->copy_template = preg_replace("'\\[uf_email_error\\](.*?)\\[/uf_email_error\\]'is", '', $tpl->copy_template);
+			$tpl->copy_template = preg_replace("'\\[uf_select_(.*?)\\](.*?)\\[/uf_select_(.*?)\\]'is", '', $tpl->copy_template);
+			$tpl->copy_template = preg_replace("'\\[uf_checkbox_(.*?)\\](.*?)\\[/uf_checkbox_(.*?)\\]'is", '', $tpl->copy_template);
+			$tpl->copy_template = preg_replace("'\\[uf_radio_(.*?)\\](.*?)\\[/uf_radio_(.*?)\\]'is", '', $tpl->copy_template);
+			$tpl->copy_template = preg_replace("'\\[uf_field_(.*?)\\](.*?)\\[/uf_field_(.*?)\\]'is", '', $tpl->copy_template);
+
+			// Добавляем пользовательские скрытые поля
 			$hiddenInputs = addHiddenFields($arHidden, $_REQUEST['fields']);
 		}
 
-
 		$tpl->set('{debug}', $debugTag);
+		// Обрабатываем комментарии в шаблоне, которые не должны попасть в вывод
+		$tpl->copy_template = preg_replace("'\\{\\*(.*?)\\*\\}'si", '', $tpl->copy_template);
 
 		// Компилим шаблон и выводим результат
 		$tpl->compile('uniform');
 		$uniform = $tpl->result['uniform'];
+		// Костыль, но подругому никак, нельзя выловить то, чего нет.
+		// Поэтому приходится пробегать по тегам, оставшимся от работы функции setConditions
+		$uniform = preg_replace("'\\[uf_field_(.*?)\\](.*?)\\[/uf_field_(.*?)\\]'is", '', $uniform);
+		$uniform = preg_replace("'\\[uf_select_(.*?)\\](.*?)\\[/uf_select_(.*?)\\]'is", '', $uniform);
+		$uniform = preg_replace("'\\[uf_checkbox_(.*?)\\](.*?)\\[/uf_checkbox_(.*?)\\]'is", '', $uniform);
+		$uniform = preg_replace("'\\[uf_radio_(.*?)\\](.*?)\\[/uf_radio_(.*?)\\]'is", '', $uniform);
 
 		if (!$cfg['nocache'] && !$isPost) {
 			// Если нужно — создаём кеш
@@ -190,7 +250,7 @@ if (!$uniform) {
 		}
 		$tpl->clear();
 	} else {
-		$uniform = '<b style="color:red">Отсутствует файл шаблона: ' . $config['skin'] . '/' . $cfg['template'] . '.tpl</b>';
+		$uniform = '<b style="color:red">Отсутствует файл шаблона: ' . $config['skin'] . '/uniform/' . $cfg['templateFolder'] . '/form.tpl</b>';
 	}
 }
 $form = '
@@ -202,44 +262,3 @@ $form .= $hiddenInputs;
 $form .= $uniform;
 $form .= '</form>';
 echo $form;
-
-// Разные полезные функции
-function getArray($string, $delimiter = ',') {
-	$arr = explode($delimiter, $string);
-	foreach ($arr as $k => $v) {
-		$arr[$k] = trim($v);
-	}
-	return array_filter($arr);
-}
-
-function getToken($string) {
-	return base64_encode($string);
-}
-
-function checkToken($first, $second) {
-	if (getToken($second) == $first) {
-		return true;
-	}
-	return false;
-}
-
-function validEmain($email) {
-	$re = "/(.+)@(.+)\\.(.+)/i";
-	return preg_match($re, $email, $matches);
-}
-
-
-function addHiddenFields($arFields, $requestArray) {
-	global $db;
-	$hiddenInputs = '';
-	if (count($arFields) > 0 && is_array($requestArray)) {
-		foreach ($arFields as $field) {
-			if (array_key_exists($field, $requestArray)) {
-				// @TODO - проработать вопрос безопасности такой конструкции.
-				$hiddenInputs .= '<input type="hidden" name="' . $field . '" value="' . $db->safesql($requestArray[$field]) . '">';
-				$hiddenInputs .= "\n";
-			}
-		}
-	}
-	return $hiddenInputs;
-}

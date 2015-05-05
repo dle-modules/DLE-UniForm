@@ -120,16 +120,16 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 		die("error_ip");
 	}
 
-	if ($is_logged AND $member_id['banned'] == "yes") {
+	if ($is_logged and $member_id['banned'] == "yes") {
 		die("error_ban");
 	}
 
 	$template_dir = ROOT_DIR . 'templates/' . $config['skin'];
 
 	// Пытаемся получить даные из шаблона с настройками
-	if (isset($_REQUEST['formConfig']) && file_exists($template_dir .'/uniform/config/' . $_REQUEST['formConfig'] . '.tpl')) {
+	if (isset($_REQUEST['formConfig']) && file_exists($template_dir . '/uniform/' . $_REQUEST['formConfig'] . '/config.tpl')) {
 		// Если файл существует - берём из него контент с настройками
-		$preset = file_get_contents($template_dir .'/uniform/config/' . $_REQUEST['formConfig'] . '.tpl');
+		$preset = file_get_contents($template_dir . '/uniform/' . $_REQUEST['formConfig'] . '/config.tpl');
 		$arConf = array();
 	} else {
 		die('error_config');
@@ -141,7 +141,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 	foreach ($preset as $v) {
 		$_v = explode('=', $v);
 		if (isset($_v[1])) {
-			$arConf[trim($_v[0])] = trim($_v[1]);		
+			$arConf[trim($_v[0])] = trim($_v[1]);
 		}
 	}
 

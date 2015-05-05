@@ -35,8 +35,9 @@ doc
 
 		$.magnificPopup.open({
 			items: {
-				src: src
+				src: src,
 			},
+			focus: '.uf-input-first',
 			type: 'ajax',
 			ajax: {
 				settings: {

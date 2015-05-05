@@ -43,7 +43,7 @@
 					Ваш email
 				</div>
 				<div class="uf-field-input">
-					<input class="uf-input [uf_error_email]uf-input-error[/uf_error_email] [uf_email_error]uf-input-error[/uf_email_error]" type="text" name="email" value="{uf_field_email}">
+					<input class="uf-input uf-input-first [uf_error_email]uf-input-error[/uf_error_email] [uf_email_error]uf-input-error[/uf_email_error]" type="text" name="email" value="{uf_field_email}">
 				</div>
 			</div>
 			<div class="uf-field">

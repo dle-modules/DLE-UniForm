@@ -42,6 +42,14 @@
 		padding: 10px;
 		line-height: 20px;
 	}
+	select.uf-input {
+		padding: 0;
+		-webkit-appearance: menulist;
+	}
+	select.uf-input[multiple] {
+		height: auto;
+		-webkit-appearance: none;
+	}
 	.uf-input-error,
 	.uf-input-error:focus {
 		background: rgba(233, 82, 65, .1);
