@@ -53,9 +53,19 @@ DLE-UniForm — простой модуль универсальных форм.
 
 Если в качестве обязательного поля указан ключ `email` — такое поле будет проверено на соответствие email-адресу (наличие знака @ и точки). Пример:
 ```
-<input class="uf-input uf-input-first [uf_error_email]uf-input-error[/uf_error_email] [uf_email_error]uf-input-error[/uf_email_error]" type="text" name="email" value="{uf_field_email}">
+<input 
+    class="
+        uf-input 
+        uf-input-first 
+        [uf_error_email]uf-input-error[/uf_error_email]
+        [uf_email_error]uf-input-error[/uf_email_error]
+    "
+    type="text" 
+    name="email" 
+    value="{uf_field_email}"
+>
 ```
-теги `[uf_error_email][/uf_error_email]` — выведут информацию, если поле email не заполнено. 
+теги `[uf_error_email][/uf_error_email]` — выведут информацию, если поле email не заполнено. <br>
 теги `[uf_email_error][/uf_email_error]` — выведут информацию только в том случаи, если email не пройдёт валидацию. Не путайте их.
 
 ### Принцип построения тегов:
