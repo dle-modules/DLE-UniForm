@@ -19,11 +19,10 @@ $cfg = array(
     'required'       => !empty($required) ? $required : (isset($arConf['required'])) ? $arConf['required'] : false,
     'hidden'         => !empty($hidden) ? $hidden : (isset($arConf['hidden'])) ? $arConf['hidden'] : false,
     'sendmail'       => !empty($sendmail) ? $sendmail : (isset($arConf['sendmail'])) ? $arConf['sendmail'] : false,
-    // 'mailTemplate'   => !empty($mailTemplate) ? $mailTemplate : (isset($arConf['mailTemplate'])) ? $arConf['mailTemplate'] : 'feedback',
     'emails'         => !empty($emails) ? $emails : (isset($arConf['emails'])) ? $arConf['emails'] : false,
     'selectFields'   => !empty($selectFields) ? $selectFields : (isset($arConf['selectFields'])) ? $arConf['selectFields'] : false,
     'checkboxFields' => !empty($checkboxFields) ? $checkboxFields : (isset($arConf['checkboxFields'])) ? $arConf['checkboxFields'] : false,
     'radioFields'    => !empty($radioFields) ? $radioFields : (isset($arConf['radioFields'])) ? $arConf['radioFields'] : false,
-    'version'        => '0.3',
-    'releaseDate'    => '05.05.2015',
+    'version'        => '1.0',
+    'releaseDate'    => '10.05.2015',
 );

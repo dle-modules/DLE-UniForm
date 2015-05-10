@@ -26,4 +26,4 @@ selectFields = select1, select2
 checkboxFields = checkbox1, checkbox2
 radioFields = radio1
 sendmail = y
-emails = p13mm@yandex.ru
+emails = mail@mail.ru, mail2@mail.ru,

@@ -23,5 +23,4 @@ templateFolder = feedback
 required = textarea, email
 // hidden = newsid,user
 sendmail = y
-// mailTemplate = feedback
-// emails = pafnuty10@gmail.com
+// emails = mail@mail.ru, mail2@mail.ru

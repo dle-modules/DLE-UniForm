@@ -23,4 +23,4 @@ templateFolder = callback
 required = phone
 selectFields = calltime
 sendmail = y
-emails = p13mm@yandex.ru
+emails = mail@mail.ru

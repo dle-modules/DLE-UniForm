@@ -199,10 +199,6 @@ if (!$uniform) {
 				$tpl->set('[/form]', '');
 				$tpl->set('[error]', '');
 				$tpl->set('[/error]', '');
-
-				if (condition) {
-					# code...
-				}
 			}
 			$tpl->copy_template = preg_replace("'\\[uf_default_value\\](.*?)\\[/uf_default_value\\]'is", '', $tpl->copy_template);
 			// Добавляем пользовательские скрытые поля

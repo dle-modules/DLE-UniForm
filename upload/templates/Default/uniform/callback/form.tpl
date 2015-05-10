@@ -1,6 +1,6 @@
 {* 
 	Для вывода кнопки открытия формы используем код:
-	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "callback"}' class='uf-btn'>Заказать</span> 
+	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "callback"}' class="uf-btn">Заказать звонок</span> 
 *}
 <div class="uf-wrapper">
 	<span class="mfp-close">&times;</span>

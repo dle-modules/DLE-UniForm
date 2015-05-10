@@ -1,6 +1,6 @@
 {* 
 	Для вывода кнопки открытия формы используем код:
-	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "test", "fields":{"morefield1": "скрытый текст", "morefield2": "Ещё скрытый текст", "notsend": "Это поле не учитывается т.к. не прописано в конфиге"}}' class='uf-btn'>Тестовая форма</span> 
+	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "test", "fields":{"morefield1": "скрытый текст", "morefield2": "Ещё скрытый текст", "notsend": "Это поле не учитывается т.к. не прописано в конфиге"}}' class="uf-btn">Тестовая форма</span> 
 *}
 <div class="uf-wrapper">
 	<span class="mfp-close">&times;</span>
