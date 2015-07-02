@@ -78,3 +78,29 @@ function ufDone(responseText, statusText, xhr, $form) {
 		$form.html(responseResult);
 	}
 }
+
+jQuery(document).ready(function($) {
+	var $inlineUniform = $('[data-uf-inline]');
+	if ($inlineUniform.length) {
+		$.each($inlineUniform, function(index, val) {
+			var $this = $(this),
+			url = $this.data('ufInline'),
+			data = $this.data('ufSettings');
+
+			$.ajax({
+				url: url,
+				data: data,
+			})
+			.done(function(data) {
+				$this.html(data);
+			})
+			.fail(function() {
+				console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
+			});
+			
+		});
+	};
+});

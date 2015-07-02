@@ -47,6 +47,11 @@ foreach ($arSendMail as $tag => $value) {
 	$allMailFields .= '[' . $tag . ']{' . $tag . '}[/' . $tag . '] : ' .  $value . '<br>';
 }
 
+$mailTpl->set('{send_date}', langdate($config['timestamp_active']));
+$mailTpl->copy_template = preg_replace_callback("#\{send_date=(.+?)\}#i", "formdate", $mailTpl->copy_template);
+
+// Страница, с которой был вызван модуль
+$mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
 
 // Определяем заголовок письма
 preg_match("'\\[header\\](.*?)\\[\\/header\\]'si", $mailTpl->copy_template, $mailHeader);

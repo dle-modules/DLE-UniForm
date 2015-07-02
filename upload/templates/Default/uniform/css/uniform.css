@@ -15,6 +15,9 @@
 		width: 500px;
 		position: relative;
 	}
+	.uf-wrapper-inline {
+		margin: 20px 0;
+	}
 	.uf-input {
 		display: block;
 		height: 30px;
@@ -90,6 +93,9 @@
 		padding: 10px 20px;
 		border-radius: 4px 4px 0 0;
 	}
+	.uf-wrapper-inline .uf-header {
+		border-radius: 0;
+	}
 	.uf-content {
 		padding: 20px;
 		font-size: 14px;
@@ -142,6 +148,69 @@
 	.uf-error-text {
 		color: #e95241;
 	}
+
+	.uf-inline-loading {
+		height: 400px;
+		background: ;		
+	}
+	.uf-inline-loading {
+		margin: 40px auto;
+		font-size: 10px;
+		position: relative;
+		text-indent: -9999em;
+		border-top: 1.1em solid rgba(155, 207, 230, .3);
+		border-right: 1.1em solid rgba(155, 207, 230, .3);
+		border-bottom: 1.1em solid rgba(155, 207, 230, .3);
+		border-left: 1.1em solid #4b9fc5;
+		-webkit-transform: translateZ(0);
+		-ms-transform: translateZ(0);
+		transform: translateZ(0);
+		-webkit-animation: ufLoading 1.1s infinite linear;
+		animation: ufLoading 1.1s infinite linear;
+	}
+	.uf-inline-loading,
+	.uf-inline-loading:after {
+		border-radius: 50%;
+		width: 10em;
+		height: 10em;
+	}
+	@-webkit-keyframes ufLoading {
+		0% {
+			-webkit-transform: rotate(0deg);
+		}
+		100% {
+			-webkit-transform: rotate(360deg);
+		}
+		}
+		@keyframes ufLoading {
+		0% {
+			-webkit-transform: rotate(0deg);
+		}
+		100% {
+			-webkit-transform: rotate(360deg);
+		}
+	}
+	@keyframes ufLoading {
+		0% {
+			-webkit-transform: rotate(0deg);
+			transform: rotate(0deg);
+		}
+		100% {
+			-webkit-transform: rotate(360deg);
+			transform: rotate(360deg);
+		}
+		}
+		@keyframes ufLoading {
+		0% {
+			-webkit-transform: rotate(0deg);
+			transform: rotate(0deg);
+		}
+		100% {
+			-webkit-transform: rotate(360deg);
+			transform: rotate(360deg);
+		}
+	}
+
 
 
 
