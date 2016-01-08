@@ -82,7 +82,7 @@ include_once ENGINE_DIR . '/classes/mail.class.php';
 $mail = new dle_mail($config, true);
 
 // Определяем параметры отправки письма
-if ($config['use_admin_mail']) {
+if ($config['use_admin_mail'] && $config['version_id'] < 10.5) {
 	$mail->from = $config['admin_mail'];
 } else {
 	if ($arSendMail['email'] != '' && in_array('email', $arRequired)) {
