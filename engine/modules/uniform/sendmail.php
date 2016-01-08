@@ -55,7 +55,8 @@ $mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
 
 // Определяем заголовок письма
 preg_match("'\\[header\\](.*?)\\[\\/header\\]'si", $mailTpl->copy_template, $mailHeader);
-$emailHeader = trim($mailHeader[1]);
+// Если передано поле header — подставим его в header :)
+$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header']) : trim($mailHeader[1]);
 
 // Обрабатываем теги шаблона
 $mailTpl->set('', $arTplTags);
