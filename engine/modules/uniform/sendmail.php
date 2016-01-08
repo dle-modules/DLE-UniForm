@@ -59,6 +59,7 @@ $mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
 preg_match("'\\[header\\](.*?)\\[\\/header\\]'si", $mailTpl->copy_template, $mailHeader);
 // Если передано поле header — подставим его в header :)
 $emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header']) : trim($mailHeader[1]);
+$emailHeader = stripslashes($emailHeader);
 
 // Обрабатываем теги шаблона
 $mailTpl->set('', $arTplTags);
@@ -81,6 +82,8 @@ $message = trim($message);
 if (!$cfg['sendAsPlain']) {
 	$message = preg_replace(array("'\r'", "'\n'"), '', $message);
 }
+$message = stripslashes($message);
+
 // Подключаем класс для отправки почты.
 include_once ENGINE_DIR . '/classes/mail.class.php';
 $asHtml = ($cfg['sendAsPlain']) ? false : true;

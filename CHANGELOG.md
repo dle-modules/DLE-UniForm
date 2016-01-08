@@ -4,6 +4,7 @@
 - Теперь если в форме есть заполненное поле с `name="header"`, такое поле будет автоматически подставлено в тему письма. [#12](https://github.com/dle-modules/DLE-UniForm/issues/12)
 - Теперь можно отправлять письма как простые текстовые [#11](https://github.com/dle-modules/DLE-UniForm/issues/11)
 - Исправлена ошибка на DLE 10.5+ [#14](https://github.com/dle-modules/DLE-UniForm/issues/14)
+- Исправлена ошибка [#10](https://github.com/dle-modules/DLE-UniForm/issues/10)
 
 ## v1.1 (02.07.2015)
 - Добавлены теги для вывода даты отправки сообщения в email. Теги работают в шаблоне email.tpl. Использование: `{send_date}` или `{send_date=D.m.Y}`.
