@@ -14,6 +14,7 @@
 // selectFields   — Поля типа select
 // checkboxFields — Поля типа checkbox
 // radioFields    — Поля типа radio
+// sendAsPlain    — Отправлять сообщение как простой
 // -------------------------------------------
 
 

@@ -35,7 +35,9 @@ $mailPost = setConditions($mailPost, 'radio', $arRadioFields, $mailTpl);
 $mailPost = setConditions($mailPost, 'field', array(), $mailTpl);
 
 foreach ($arSendMail as $tag => $value) {
-	$value = str_replace(array("\r", "\n"), array('', '<br>'), $value);
+	if (!$cfg['sendAsPlain']) {
+		$value = str_replace(array("\r", "\n"), array('', '<br>'), $value);
+	}
 	$arTplTags['{' . $tag . '}'] = $value;
 
 	if (isset($value) && $value != '') {
@@ -76,11 +78,13 @@ $message = preg_replace("'\\{\\*(.*?)\\*\\}'si", '', $message);
 
 
 $message = trim($message);
-$message = preg_replace(array("'\r'", "'\n'"), '', $message);
-
+if (!$cfg['sendAsPlain']) {
+	$message = preg_replace(array("'\r'", "'\n'"), '', $message);
+}
 // Подключаем класс для отправки почты.
 include_once ENGINE_DIR . '/classes/mail.class.php';
-$mail = new dle_mail($config, true);
+$asHtml = ($cfg['sendAsPlain']) ? false : true;
+$mail = new dle_mail($config, $asHtml);
 
 // Определяем параметры отправки письма
 if ($config['use_admin_mail'] && $config['version_id'] < 10.5) {
