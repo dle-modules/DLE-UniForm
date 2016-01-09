@@ -20,8 +20,8 @@
 
 
 templateFolder = newsauthor
-nocache = y
-debug = y
+// nocache = y
+// debug = y
 required = textarea, email
 hidden = newsId
 sendmail = y

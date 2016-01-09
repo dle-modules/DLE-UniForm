@@ -113,12 +113,30 @@ if (!$uniform) {
 				}
 			}
 
-			// Добавляем данные из конфига DLE для возможности использовать в email сообщении			
+			echo "<pre class='dle-pre'>";
+			print_r($member_id);
+			echo "</pre>";
+
+			// Добавляем данные из конфига DLE для возможности использовать в email сообщении
 			$_POST['site_home_title']    = $config['home_title'];
 			$_POST['site_http_home_url'] = $config['http_home_url'];
 			$_POST['site_short_title']   = $config['short_title'];
 
-
+			// Добавляем данные пользователя, заполнившего форму
+			$_POST['user_group'] = $member_id['user_group'];
+			if ($member_id['user_group'] == 5) {
+				$_POST['user_name']     = 'Гость';
+				$_POST['user_fullname'] = '';
+				$_POST['user_email']    = '';
+				$_POST['user_foto']     = '';
+				$_POST['user_land']     = '';
+			} else {
+				$_POST['user_name']     = $member_id['name'];
+				$_POST['user_fullname'] = $member_id['fullname'];
+				$_POST['user_email']    = $member_id['email'];
+				$_POST['user_foto']     = $member_id['foto'];
+				$_POST['user_land']     = $member_id['land'];
+			}
 
 			// Получаем массив обязательных полей
 			$arRequired = getArray($cfg['required']);
