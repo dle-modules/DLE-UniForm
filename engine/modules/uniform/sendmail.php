@@ -49,8 +49,8 @@ foreach ($arSendMail as $tag => $value) {
 	$allMailFields .= '[' . $tag . ']{' . $tag . '}[/' . $tag . '] : ' .  $value . '<br>';
 }
 
-$mailTpl->set('{send_date}', langdate($config['timestamp_active']));
-$mailTpl->copy_template = preg_replace_callback("#\{send_date=(.+?)\}#i", "formdate", $mailTpl->copy_template);
+$mailTpl->set('{send_date}', date($config['timestamp_active'], time()));
+
 
 // Страница, с которой был вызван модуль
 $mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
@@ -80,7 +80,7 @@ $message = preg_replace("'\\{\\*(.*?)\\*\\}'si", '', $message);
 
 $message = trim($message);
 if (!$cfg['sendAsPlain']) {
-	$message = preg_replace(array("'\r'", "'\n'"), '', $message);
+	$message = str_replace(array("\r", "\n"), '', $message);
 }
 $message = stripslashes($message);
 

@@ -2,12 +2,15 @@
 	Шаблон для демонстрации возможности написать автору новости.
 
 	Для вывода кнопки открытия формы используем код:
-	<span class="uf-btn" data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "customheader"}'>Написать на почту</span> 
+	Для вставки в шаблон полной или краткой новости:
+	<span class="uf-btn" data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "newsauthor", "fields": {"newsId": "{news-id}"}}'>Связь с автором новости</span> 
+
+	Для вставки в другие шаблоны {news-id} нужно заменить на ID нужной новости.
 *}
 <div class="uf-wrapper">
 	<span class="mfp-close">&times;</span>
 	<div class="uf-header">
-		Написать на почту
+		Связь с автором новости
 	</div>
 	[debug]<div class="uf-content">{debug}</div>[/debug]
 	[error]
@@ -30,7 +33,7 @@
 		</div>
 	[/error]
 	[success]
-		<div class="uf-content"><b>Спасибо за письмо!</b> <br> Если оно потребует ответа — мы свяжемся с вами</div>
+		<div class="uf-content"><b>Ваше сообщение успешно отправлено!</b></div>
 	[/success]
 	[form]
 		<div class="uf-content">		
