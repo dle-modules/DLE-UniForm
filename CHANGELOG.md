@@ -5,6 +5,7 @@
 - Теперь можно отправлять письма как простые текстовые [#11](https://github.com/dle-modules/DLE-UniForm/issues/11)
 - Исправлена ошибка на DLE 10.5+ [#14](https://github.com/dle-modules/DLE-UniForm/issues/14)
 - Исправлена ошибка [#10](https://github.com/dle-modules/DLE-UniForm/issues/10)
+- Если пользователь авторизован, то его email автоматически будет подставлен в поле `name="email"`.
 
 ## v1.1 (02.07.2015)
 - Добавлены теги для вывода даты отправки сообщения в email. Теги работают в шаблоне email.tpl. Использование: `{send_date}` или `{send_date=D.m.Y}`.

@@ -214,6 +214,10 @@ if (!$uniform) {
 			$tpl->set('[uf_default_value]', '');
 			$tpl->set('[/uf_default_value]', '');
 
+			// Если пользователь авторизован — подставим его email в поле email.					
+			if ($member_id['user_group'] !== 5) {
+				$tpl->copy_template = str_replace('{uf_field_email}', $member_id['email'], $tpl->copy_template);
+			}
 			$tpl->copy_template = preg_replace("'\\{uf_field_(.*?)\\}'si", '', $tpl->copy_template);
 			$tpl->copy_template = preg_replace("'\\[uf_error_(.*?)\\](.*?)\\[/uf_error_(.*?)\\]'is", '', $tpl->copy_template);
 			$tpl->copy_template = preg_replace("'\\[uf_email_error\\](.*?)\\[/uf_email_error\\]'is", '', $tpl->copy_template);
