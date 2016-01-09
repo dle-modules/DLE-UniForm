@@ -1,0 +1,13 @@
+# Исключаем всё (файлы от DLE нам не нужны)
+/*
+
+# Кроме самого .gitignore (и как следствие всего, что в нём написано)
+!.gitignore
+
+# Кроме папок и файлов модуля
+!/engine/modules/uniform/
+!/engine/ajax/uniform/
+!/templates/Default/uniform/
+!/README.md
+!/LICENSE
+!/CHANGELOG.md

@@ -14,13 +14,16 @@
 // selectFields   — Поля типа select
 // checkboxFields — Поля типа checkbox
 // radioFields    — Поля типа radio
+// sendAsPlain    — Отправлять сообщение как простой текст
+// sendToAuthor   — Отправить письмо автору новости, если есть newsId есть поле с name="newsId" и если автор разрешил получение писем с сайта.
 // -------------------------------------------
 
 
-templateFolder = callback
+templateFolder = newsauthor
 // nocache = y
 // debug = y
-required = phone
-selectFields = calltime
+required = textarea, email
+hidden = newsId
 sendmail = y
-emails = mail@mail.ru
+emails = mail@mail.mail
+sendToAuthor = y

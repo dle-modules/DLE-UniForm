@@ -23,6 +23,8 @@ $cfg = array(
     'selectFields'   => !empty($selectFields) ? $selectFields : (isset($arConf['selectFields'])) ? $arConf['selectFields'] : false,
     'checkboxFields' => !empty($checkboxFields) ? $checkboxFields : (isset($arConf['checkboxFields'])) ? $arConf['checkboxFields'] : false,
     'radioFields'    => !empty($radioFields) ? $radioFields : (isset($arConf['radioFields'])) ? $arConf['radioFields'] : false,
-    'version'        => '1.0',
-    'releaseDate'    => '10.05.2015',
+    'sendAsPlain'    => !empty($sendAsPlain) ? true : (isset($arConf['sendAsPlain'])) ? true : false,
+    'sendToAuthor'   => !empty($sendToAuthor) ? true : (isset($arConf['sendToAuthor'])) ? true : false,
+    'version'        => '1.2',
+    'releaseDate'    => '09.01.2016',
 );

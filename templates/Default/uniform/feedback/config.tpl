@@ -14,16 +14,15 @@
 // selectFields   — Поля типа select
 // checkboxFields — Поля типа checkbox
 // radioFields    — Поля типа radio
+// sendAsPlain    — Отправлять сообщение как простой текст
+// sendToAuthor   — Отправить письмо автору новости, если есть newsId есть поле с name="newsId" и если автор разрешил получение писем с сайта.
 // -------------------------------------------
 
 
-templateFolder = test
-nocache = y
+templateFolder = feedback
+// nocache = y
 // debug = y
-required = field1, field2, email
-hidden = morefield1, morefield2
-selectFields = select1, select2
-checkboxFields = checkbox1, checkbox2
-radioFields = radio1
+required = textarea, email
+// hidden = newsid,user
 sendmail = y
-emails = mail@mail.ru, mail2@mail.ru,
+// emails = mail@mail.ru, mail2@mail.ru

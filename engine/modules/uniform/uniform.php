@@ -93,6 +93,51 @@ if (!$uniform) {
 			$post = $mailPost = $_POST;
 			unset($post['csrfToken'], $post['formConfig'], $mailPost['csrfToken'], $mailPost['formConfig']);
 
+			// Если в посте передано поле newsId, нужно получить информацию из новости
+			if (isset($post['newsId']) && (int) $post['newsId'] > 0) {
+				$newsItem = $db->super_query('SELECT p.id, p.autor, p.title, u.name, u.email, u.allow_mail FROM ' . PREFIX . '_post p LEFT JOIN ' . USERPREFIX . '_users u ON (p.autor=u.name) WHERE id = ' . (int) $post['newsId']);
+				// Если запрос нашёл новость — работаем
+				if ($newsItem['id'] > 0) {
+					// Если автор новости разрешил отправлять ему письма и в конфиге есть sendToAuthor — добавим ещё одного получателя
+					if ($newsItem['allow_mail'] && $cfg['sendToAuthor']) {
+						$cfg['emails'] .= ',' . $newsItem['email'];
+					}
+
+					// Добавим в массив $_POST данные из новости
+					foreach ($newsItem as $key => $value) {
+						if ($key == 'title') {
+							$value = stripslashes($value);
+						}
+						$_POST['news_' . $key] = $value;
+					}
+				}
+			}
+
+			echo "<pre class='dle-pre'>";
+			print_r($member_id);
+			echo "</pre>";
+
+			// Добавляем данные из конфига DLE для возможности использовать в email сообщении
+			$_POST['site_home_title']    = $config['home_title'];
+			$_POST['site_http_home_url'] = $config['http_home_url'];
+			$_POST['site_short_title']   = $config['short_title'];
+
+			// Добавляем данные пользователя, заполнившего форму
+			$_POST['user_group'] = $member_id['user_group'];
+			if ($member_id['user_group'] == 5) {
+				$_POST['user_name']     = 'Гость';
+				$_POST['user_fullname'] = '';
+				$_POST['user_email']    = '';
+				$_POST['user_foto']     = '';
+				$_POST['user_land']     = '';
+			} else {
+				$_POST['user_name']     = $member_id['name'];
+				$_POST['user_fullname'] = $member_id['fullname'];
+				$_POST['user_email']    = $member_id['email'];
+				$_POST['user_foto']     = $member_id['foto'];
+				$_POST['user_land']     = $member_id['land'];
+			}
+
 			// Получаем массив обязательных полей
 			$arRequired = getArray($cfg['required']);
 
@@ -214,6 +259,10 @@ if (!$uniform) {
 			$tpl->set('[uf_default_value]', '');
 			$tpl->set('[/uf_default_value]', '');
 
+			// Если пользователь авторизован — подставим его email в поле email.
+			if ($member_id['user_group'] !== 5) {
+				$tpl->copy_template = str_replace('{uf_field_email}', $member_id['email'], $tpl->copy_template);
+			}
 			$tpl->copy_template = preg_replace("'\\{uf_field_(.*?)\\}'si", '', $tpl->copy_template);
 			$tpl->copy_template = preg_replace("'\\[uf_error_(.*?)\\](.*?)\\[/uf_error_(.*?)\\]'is", '', $tpl->copy_template);
 			$tpl->copy_template = preg_replace("'\\[uf_email_error\\](.*?)\\[/uf_email_error\\]'is", '', $tpl->copy_template);

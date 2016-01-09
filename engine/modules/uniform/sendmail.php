@@ -35,7 +35,9 @@ $mailPost = setConditions($mailPost, 'radio', $arRadioFields, $mailTpl);
 $mailPost = setConditions($mailPost, 'field', array(), $mailTpl);
 
 foreach ($arSendMail as $tag => $value) {
-	$value = str_replace(array("\r", "\n"), array('', '<br>'), $value);
+	if (!$cfg['sendAsPlain']) {
+		$value = str_replace(array("\r", "\n"), array('', '<br>'), $value);
+	}
 	$arTplTags['{' . $tag . '}'] = $value;
 
 	if (isset($value) && $value != '') {
@@ -47,15 +49,17 @@ foreach ($arSendMail as $tag => $value) {
 	$allMailFields .= '[' . $tag . ']{' . $tag . '}[/' . $tag . '] : ' .  $value . '<br>';
 }
 
-$mailTpl->set('{send_date}', langdate($config['timestamp_active']));
-$mailTpl->copy_template = preg_replace_callback("#\{send_date=(.+?)\}#i", "formdate", $mailTpl->copy_template);
+$mailTpl->set('{send_date}', date($config['timestamp_active'], time()));
+
 
 // Страница, с которой был вызван модуль
 $mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
 
 // Определяем заголовок письма
 preg_match("'\\[header\\](.*?)\\[\\/header\\]'si", $mailTpl->copy_template, $mailHeader);
-$emailHeader = trim($mailHeader[1]);
+// Если передано поле header — подставим его в header :)
+$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header']) : trim($mailHeader[1]);
+$emailHeader = stripslashes($emailHeader);
 
 // Обрабатываем теги шаблона
 $mailTpl->set('', $arTplTags);
@@ -75,14 +79,18 @@ $message = preg_replace("'\\{\\*(.*?)\\*\\}'si", '', $message);
 
 
 $message = trim($message);
-$message = preg_replace(array("'\r'", "'\n'"), '', $message);
+if (!$cfg['sendAsPlain']) {
+	$message = str_replace(array("\r", "\n"), '', $message);
+}
+$message = stripslashes($message);
 
 // Подключаем класс для отправки почты.
 include_once ENGINE_DIR . '/classes/mail.class.php';
-$mail = new dle_mail($config, true);
+$asHtml = ($cfg['sendAsPlain']) ? false : true;
+$mail = new dle_mail($config, $asHtml);
 
 // Определяем параметры отправки письма
-if ($config['use_admin_mail']) {
+if ($config['use_admin_mail'] && $config['version_id'] < 10.5) {
 	$mail->from = $config['admin_mail'];
 } else {
 	if ($arSendMail['email'] != '' && in_array('email', $arRequired)) {
