@@ -113,10 +113,6 @@ if (!$uniform) {
 				}
 			}
 
-			echo "<pre class='dle-pre'>";
-			print_r($member_id);
-			echo "</pre>";
-
 			// Добавляем данные из конфига DLE для возможности использовать в email сообщении
 			$_POST['site_home_title']    = $config['home_title'];
 			$_POST['site_http_home_url'] = $config['http_home_url'];
