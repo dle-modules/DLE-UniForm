@@ -59,7 +59,7 @@
 				<div class="uf-field-input">
 					{* Условие вывода, при котором текст покажется, если значение поля равно 123 *}
 					[uf_field_field1="123"]Передано значение: 123[/uf_field_field1]
-					<input class="uf-input uf-input-first [uf_error_field1]uf-input-error[/uf_error_field1]" type="text" name="field1" requird value="{uf_field_field1}" placeholder="Попробуйте вбить 123">
+					<input class="uf-input uf-input-first [uf_error_field1]uf-input-error[/uf_error_field1]" type="text" name="field1" required value="{uf_field_field1}" placeholder="Попробуйте вбить 123">
 				</div>
 			</div>
 			<div class="uf-field">
@@ -75,7 +75,7 @@
 					email
 				</div>
 				<div class="uf-field-input">
-					<input class="uf-input [uf_error_email]uf-input-error[/uf_error_email]" type="text" name="email" requird value="{uf_field_email}">
+					<input class="uf-input [uf_error_email]uf-input-error[/uf_error_email]" type="text" name="email" required value="{uf_field_email}">
 				</div>
 			</div>
 			<div class="uf-field">
