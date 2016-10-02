@@ -20,13 +20,14 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
 	include ENGINE_DIR . '/data/config.php';
 
+	/** @var array $config */
 	date_default_timezone_set($config['date_adjust']);
 
-	if ($config['http_home_url'] == "") {
+	if ($config['http_home_url'] == '') {
 
 		$config['http_home_url'] = explode("engine/ajax/uniform/uniform.php", $_SERVER['PHP_SELF']);
 		$config['http_home_url'] = reset($config['http_home_url']);
-		$config['http_home_url'] = "http://" . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
+		$config['http_home_url'] = 'http://' . $_SERVER['HTTP_HOST'] . $config['http_home_url'];
 
 	}
 
@@ -34,63 +35,62 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 	require_once ENGINE_DIR . '/data/dbconfig.php';
 	require_once ENGINE_DIR . '/modules/functions.php';
 
-	if (function_exists('dle_session')) {
-		dle_session();
-	} else {
-		@session_start();
-	}
+	dle_session();
 
-	$user_group = get_vars("usergroup");
+	$user_group = get_vars('usergroup');
 	if (!$user_group) {
-		$user_group = array();
+		$user_group = [];
 		$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY id ASC");
 		while ($row = $db->get_row()) {
-			$user_group[$row['id']] = array();
+			$user_group[$row['id']] = [];
 			foreach ($row as $key => $value) {
 				$user_group[$row['id']][$key] = stripslashes($value);
 			}
 
 		}
-		set_vars("usergroup", $user_group);
+		set_vars('usergroup', $user_group);
 		$db->free();
 	}
 
 	//####################################################################################################################
 	//                    Определение забаненных пользователей и IP
 	//####################################################################################################################
-	$banned_info = get_vars("banned");
+	$banned_info = get_vars('banned');
 
 	if (!is_array($banned_info)) {
-		$banned_info = array();
+		$banned_info = [];
 
 		$db->query("SELECT * FROM " . USERPREFIX . "_banned");
 		while ($row = $db->get_row()) {
 
 			if ($row['users_id']) {
 
-				$banned_info['users_id'][$row['users_id']] = array(
+				$banned_info['users_id'][$row['users_id']] = [
 					'users_id' => $row['users_id'],
 					'descr'    => stripslashes($row['descr']),
-					'date'     => $row['date']);
+					'date'     => $row['date']
+				];
 
 			} else {
 
 				if (count(explode(".", $row['ip'])) == 4) {
-					$banned_info['ip'][$row['ip']] = array(
+					$banned_info['ip'][$row['ip']] = [
 						'ip'    => $row['ip'],
 						'descr' => stripslashes($row['descr']),
 						'date'  => $row['date'],
-					);
+					];
 				} elseif (strpos($row['ip'], "@") !== false) {
-					$banned_info['email'][$row['ip']] = array(
+					$banned_info['email'][$row['ip']] = [
 						'email' => $row['ip'],
 						'descr' => stripslashes($row['descr']),
-						'date'  => $row['date']);
+						'date'  => $row['date']
+					];
 				} else {
-					$banned_info['name'][$row['ip']] = array(
+					$banned_info['name'][$row['ip']] = [
 						'name'  => $row['ip'],
 						'descr' => stripslashes($row['descr']),
-						'date'  => $row['date']);
+						'date'  => $row['date']
+					];
 				}
 
 			}
@@ -100,9 +100,8 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 		$db->free();
 	}
 
-	$config['charset'] = ($lang['charset'] != '') ? $lang['charset'] : $config['charset'];
-	$is_logged         = false;
-	$member_id         = array();
+	$is_logged = false;
+	$member_id = [];
 
 	if ($config['allow_registration']) {
 		require_once ENGINE_DIR . '/modules/sitelogin.php';
@@ -116,7 +115,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 		die("error_ip");
 	}
 
-	if ($is_logged and $member_id['banned'] == "yes") {
+	if ($is_logged and $member_id['banned'] == 'yes') {
 		die("error_ban");
 	}
 
@@ -126,9 +125,9 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 	if (isset($_REQUEST['formConfig']) && file_exists($template_dir . '/uniform/' . $_REQUEST['formConfig'] . '/config.tpl')) {
 		// Если файл существует - берём из него контент с настройками
 		$preset = file_get_contents($template_dir . '/uniform/' . $_REQUEST['formConfig'] . '/config.tpl');
-		$arConf = array();
+		$arConf = [];
 	} else {
-		die('error_config');
+		die('config file not found');
 	}
 	// Разбиваем полученные из файла нестройки по строкам
 	$preset = explode("\n", $preset);

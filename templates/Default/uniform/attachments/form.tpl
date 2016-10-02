@@ -1,6 +1,6 @@
 {* 
 	Для вывода кнопки открытия формы используем код:
-	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "feedback"}' class="uf-btn">Обратная связь</span> 
+	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "attachments"}' class="uf-btn">Обратная связь</span> 
 *}
 <div class="uf-wrapper">
 	<span class="mfp-close">&times;</span>
@@ -15,9 +15,6 @@
 				[uf_token_error]
 					<li>Ошибка сессии, попробуйте ещё раз.</li>
 				[/uf_token_error]
-				[uf_error_textarea]
-					<li>Вы не написали сообщение</li>
-				[/uf_error_textarea]
 				[uf_error_email]
 					<li>Вы не указали email</li>
 				[/uf_error_email]
@@ -31,16 +28,6 @@
 		<div class="uf-content"><b>Спасибо за обращение!</b> <br> Если оно потребует ответа — мы свяжемся с вами</div>
 	[/success]
 	[form]
-		<!-- [group=1]
-			<div class="uf-alert uf-alert-success">
-				Сообщение для админа
-			</div>
-		[/group]
-		[not-group=1]
-			<div class="uf-alert uf-alert-success">
-				Сообщение для остальных пользователей
-			</div>
-		[/not-group] -->
 		<div class="uf-content">		
 			<div class="uf-field">
 				<div class="uf-label">
@@ -52,9 +39,11 @@
 			</div>
 			<div class="uf-field">
 				<div class="uf-label">
-					Сообщение
+					Файлы
 				</div>
 				<div class="uf-field-input">
+					<input class="uf-input" name="images" type="file">
+
 					<textarea class="uf-input [uf_error_textarea]uf-input-error[/uf_error_textarea]" name="textarea" cols="30" rows="10">{uf_field_textarea}</textarea>
 				</div>
 			</div>

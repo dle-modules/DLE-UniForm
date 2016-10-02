@@ -8,8 +8,23 @@
  */
 
 if (!defined('DATALIFEENGINE')) {
-	die("Go fuck yourself!");
+	die('Что то пошло не так');
 }
+/**
+ * Информация из DLE, доступная в модуле
+ *
+ * @global boolean $is_logged           Является ли посетитель авторизованным пользователем или гостем.
+ * @global array   $member_id           Массив с информацией о авторизованном пользователе, включая всю его информацию из профиля.
+ * @global object  $db                  Класс DLE для работы с базой данных.
+ * @global array   $cat_info            Информация обо всех категориях на сайте.
+ * @global array   $config              Информация обо всех настройках скрипта.
+ * @global array   $user_group          Информация о всех группах пользователей и их настройках.
+ * @global integer $category_id         ID категории которую просматривает посетитель.
+ * @global integer $_TIME               Содержит текущее время в UNIX формате с учетом настроек смещения в настройках скрипта.
+ * @global array   $lang                Массив содержащий текст из языкового пакета.
+ * @global boolean $smartphone_detected Если пользователь со смартфона - true.
+ * @global string  $dle_module          Информация о просматриваемомразделе сайта, либо информацию переменной do из URL браузера.
+ */
 
 // Подключаем конфиг модуля
 include ENGINE_DIR . '/modules/uniform/cfg.php';
@@ -18,11 +33,13 @@ include ENGINE_DIR . '/modules/uniform/cfg.php';
 include ENGINE_DIR . '/modules/uniform/functions.php';
 
 // Имя кеша
+/** @var array $cfg */
 $cacheName = md5(implode('_', $cfg));
 // ID сессии
 $sessionId = session_id();
 
 $uniform = false;
+$hiddenInputs = '';
 // Если данные передаются постом — "запомним" это.
 $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST') ? true : false;
 
@@ -33,7 +50,7 @@ if (!$cfg['nocache'] && !$isPost) {
 if (!$uniform) {
 	if (!defined('TEMPLATE_DIR')) {
 		require_once ENGINE_DIR . '/classes/templates.class.php';
-		$tpl      = new dle_template();
+		$tpl = new dle_template();
 		$tpl->dir = $template_dir;
 		define('TEMPLATE_DIR', $tpl->dir);
 	}
@@ -47,7 +64,7 @@ if (!$uniform) {
 		$arHidden = getArray($cfg['hidden']);
 
 		// Дебаг
-		$debug    = ($cfg['debug']) ? true : false;
+		$debug = ($cfg['debug']) ? true : false;
 		$debugTag = '';
 		if ($debug) {
 			$tpl->set('[debug]', '');
@@ -60,7 +77,7 @@ if (!$uniform) {
 		}
 
 		// Массив для отправки в sendmail.php
-		$arSendMail = array();
+		$arSendMail = [];
 
 		if ($isPost) {
 			// Переменная-индикатор ошибок.
@@ -74,7 +91,6 @@ if (!$uniform) {
 			// Если данные передаются постом — надо бы их обработать
 			require_once ENGINE_DIR . '/classes/parse.class.php';
 			$parse = new ParseFilter();
-			// $parse->safe_mode = true;
 
 			if (!checkToken($_POST['csrfToken'], $cacheName . $config['skin'] . $sessionId)) {
 				// Проверяем токен
@@ -90,8 +106,8 @@ if (!$uniform) {
 			unset($post['csrfToken'], $post['formConfig'], $mailPost['csrfToken'], $mailPost['formConfig']);
 
 			// Если в посте передано поле newsId, нужно получить информацию из новости
-			if (isset($post['newsId']) && (int) $post['newsId'] > 0) {
-				$newsItem = $db->super_query('SELECT p.id, p.autor, p.title, u.name, u.email, u.allow_mail FROM ' . PREFIX . '_post p LEFT JOIN ' . USERPREFIX . '_users u ON (p.autor=u.name) WHERE id = ' . (int) $post['newsId']);
+			if (isset($post['newsId']) && (int)$post['newsId'] > 0) {
+				$newsItem = $db->super_query('SELECT p.id, p.autor, p.title, u.name, u.email, u.allow_mail FROM ' . PREFIX . '_post p LEFT JOIN ' . USERPREFIX . '_users u ON (p.autor=u.name) WHERE id = ' . (int)$post['newsId']);
 				// Если запрос нашёл новость — работаем
 				if ($newsItem['id'] > 0) {
 					// Если автор новости разрешил отправлять ему письма и в конфиге есть sendToAuthor — добавим ещё одного получателя
@@ -110,24 +126,24 @@ if (!$uniform) {
 			}
 
 			// Добавляем данные из конфига DLE для возможности использовать в email сообщении
-			$_POST['site_home_title']    = $config['home_title'];
+			$_POST['site_home_title'] = $config['home_title'];
 			$_POST['site_http_home_url'] = $config['http_home_url'];
-			$_POST['site_short_title']   = $config['short_title'];
+			$_POST['site_short_title'] = $config['short_title'];
 
 			// Добавляем данные пользователя, заполнившего форму
 			$_POST['user_group'] = $member_id['user_group'];
 			if ($member_id['user_group'] == 5) {
-				$_POST['user_name']     = 'Гость';
+				$_POST['user_name'] = 'Гость';
 				$_POST['user_fullname'] = '';
-				$_POST['user_email']    = '';
-				$_POST['user_foto']     = '';
-				$_POST['user_land']     = '';
+				$_POST['user_email'] = '';
+				$_POST['user_foto'] = '';
+				$_POST['user_land'] = '';
 			} else {
-				$_POST['user_name']     = $member_id['name'];
+				$_POST['user_name'] = $member_id['name'];
 				$_POST['user_fullname'] = $member_id['fullname'];
-				$_POST['user_email']    = $member_id['email'];
-				$_POST['user_foto']     = $member_id['foto'];
-				$_POST['user_land']     = $member_id['land'];
+				$_POST['user_email'] = $member_id['email'];
+				$_POST['user_foto'] = $member_id['foto'];
+				$_POST['user_land'] = $member_id['land'];
 			}
 
 			// Получаем массив обязательных полей
@@ -149,18 +165,18 @@ if (!$uniform) {
 			$post = setConditions($post, 'radio', $arRadioFields, $tpl);
 
 			// Проверяем условия для простых полей
-			$post = setConditions($post, 'field', array(), $tpl);
+			$post = setConditions($post, 'field', [], $tpl);
 
 			// Проверяем обязательные поля
 			foreach ($_POST as $k => $val) {
 				// Поля csrfToken и formConfig нас не интересуют.
-				if (in_array($k, array('csrfToken', 'formConfig'))) {
+				if (in_array($k, ['csrfToken', 'formConfig'])) {
 					continue;
 				}
 				// Остальные поля надо бы обработать
 				if (!is_array($val)) {
-					$val            = convert_unicode($val, $config['charset']);
-					$val            = $parse->process(trim($val));
+					$val = convert_unicode($val, $config['charset']);
+					$val = $parse->process(trim($val));
 					$arSendMail[$k] = $val;
 				}
 
@@ -177,18 +193,18 @@ if (!$uniform) {
 
 				if (count($arSelectFields) > 0) {
 					// Назначаем обработку полей селектов и добавляем данные в массив для отправки на почту
-					$arSendMail = assignFiels($k, $val, 'select', $arSelectFields, $parse, $tpl, $arSendMail);
+					$arSendMail = assignFiedls($k, $val, 'select', $arSelectFields, $parse, $tpl, $arSendMail);
 					// setConditions($k, $val, 'select', $arSelectFields, $tpl);
 				}
 
 				if (count($arCheckboxFields) > 0) {
 					// Назначаем обработку полей чекбоксов и добавляем данные в массив для отправки на почту
-					$arSendMail = assignFiels($k, $val, 'checkbox', $arCheckboxFields, $parse, $tpl, $arSendMail);
+					$arSendMail = assignFiedls($k, $val, 'checkbox', $arCheckboxFields, $parse, $tpl, $arSendMail);
 				}
 
 				if (count($arRadioFields) > 0) {
 					// Назначаем обработку полей чекбоксов и добавляем данные в массив для отправки на почту
-					$arSendMail = assignFiels($k, $val, 'radio', $arRadioFields, $parse, $tpl, $arSendMail);
+					$arSendMail = assignFiedls($k, $val, 'radio', $arRadioFields, $parse, $tpl, $arSendMail);
 					// setConditions($k, $val, 'radio', $arRadioFields,  $tpl);
 				}
 

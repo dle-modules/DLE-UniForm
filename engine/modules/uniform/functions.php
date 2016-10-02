@@ -8,7 +8,7 @@
  */
 
 if (!defined('DATALIFEENGINE')) {
-	die("Go fuck yourself!");
+	die('Что то пошло не так');
 }
 /**
  * Различные функции, используемые в файлах модуля.
@@ -16,6 +16,7 @@ if (!defined('DATALIFEENGINE')) {
 
 /**
  * Получение массиа из строки конфига
+ *
  * @param  string $string    Строка конфига
  * @param  string $delimiter Разделитель массива
  *
@@ -26,11 +27,13 @@ function getArray($string, $delimiter = ',') {
 	foreach ($arr as $k => $v) {
 		$arr[$k] = trim($v);
 	}
+
 	return array_filter($arr);
 }
 
 /**
  * Получение зашифрованного CSRF-токена
+ *
  * @param  string $string Токен
  *
  * @return string         Зашифрованный токен
@@ -41,6 +44,7 @@ function getToken($string) {
 
 /**
  * Валидация CSRF-токена
+ *
  * @param  string $first  Первый токен
  * @param  string $second Второй токен
  *
@@ -50,27 +54,32 @@ function checkToken($first, $second) {
 	if (getToken($second) == $first) {
 		return true;
 	}
+
 	return false;
 }
 
 /**
  * Валидация email-адреса
+ *
  * @param  string $email Email-адрес
+ *
  * @return bool          true|false
  */
 function validEmain($email) {
 	$re = "/(.+)@(.+)\\.(.+)/i";
+
 	return preg_match($re, $email, $matches);
 }
 
 /**
  * Добавляем скрытые поля в форму
+ *
  * @param  array $arFields     Поля, разрешенные в конфиге
  * @param  array $requestArray поля из реквеста
  *
  * @return string Поля, добавляемые в форму
  */
-function addHiddenFields($arFields = array(), $requestArray = array()) {
+function addHiddenFields($arFields = [], $requestArray = []) {
 	global $db;
 	$hiddenInputs = '';
 	if (count($arFields) > 0 && is_array($requestArray)) {
@@ -82,11 +91,14 @@ function addHiddenFields($arFields = array(), $requestArray = array()) {
 			}
 		}
 	}
+
 	return $hiddenInputs;
 }
+
 /**
  * Функция для назначения тегов, обрабатывающих селекты, чекбоксы и радиокнопки.
  * Код вынесен в функцию для избежания дублирования.
+ *
  * @param  string  $k          Имя поля
  * @param  string  $val        Значение поля
  * @param  string  $fieldType  Тип поля
@@ -97,11 +109,19 @@ function addHiddenFields($arFields = array(), $requestArray = array()) {
  *
  * @return array Массив для отправки по email
  */
-function assignFiels($k = '', $val = '', $fieldType = '', $arFields = array(), $parse = false, $tpl = false, $arSendMail = array()) {
+function assignFiedls(
+	$k = '',
+	$val = '',
+	$fieldType = '',
+	$arFields = [],
+	$parse = false,
+	$tpl = false,
+	$arSendMail = []
+) {
 
 	if (in_array($k, $arFields)) {
 		// Если поле содержится в нужном массиве
-		$arSendMailTmp = array();
+		$arSendMailTmp = [];
 		if (is_array($val)) {
 			// Если поле множественное (множественный селект к примеру)
 			foreach ($val as $valvalue) {
@@ -109,7 +129,7 @@ function assignFiels($k = '', $val = '', $fieldType = '', $arFields = array(), $
 				$valvalue = convert_unicode($valvalue, $config['charset']);
 				$valvalue = $parse->process(trim($valvalue));
 				// Добавим значение в массив для последующей отправки на email в нормальном виде.
-				$arSendMailTmp[]    = $valvalue;
+				$arSendMailTmp[] = $valvalue;
 				$tpl->copy_template = str_replace("[uf_{$fieldType}_{$k}_{$valvalue}]", '', $tpl->copy_template);
 				$tpl->copy_template = str_replace("[/uf_{$fieldType}_{$k}_{$valvalue}]", '', $tpl->copy_template);
 			}
@@ -125,19 +145,21 @@ function assignFiels($k = '', $val = '', $fieldType = '', $arFields = array(), $
 		// Удалем теги, которые не должны показываться
 		$tpl->copy_template = preg_replace("'\\[uf_{$fieldType}_{$k}_(.*?)\\](.*?)\\[/uf_{$fieldType}_{$k}_(.*?)\\]'is", '', $tpl->copy_template);
 	}
+
 	return $arSendMail;
 }
 
 /**
  * Обрабатываем теги с условиями вывода
+ *
  * @param array  $data      массив с данными
- * @param string  $fieldType Тип поля
- * @param array   $arFields  массив с полями, относящимися к выбранному типу поля
+ * @param string $fieldType Тип поля
+ * @param array  $arFields  массив с полями, относящимися к выбранному типу поля
  * @param obgect $tpl       Объект шаблонизатора
  *
  * @return array Массив с удалёнными обработанными данными
  */
-function setConditions($data, $fieldType = '', $arFields = array(), $tpl = false) {
+function setConditions($data, $fieldType = '', $arFields = [], $tpl = false) {
 
 	if (count($data) > 0) {
 		// Если есть данные — работаем

@@ -8,31 +8,33 @@
  */
 
 if (!defined('DATALIFEENGINE')) {
-	die("Go fuck yourself!");
+	die('Что то пошло не так');
 }
 
 
-$mailTpl                        = new dle_template();
-$mailTpl->dir                   = TEMPLATE_DIR;
+$mailTpl = new dle_template();
+$mailTpl->dir = TEMPLATE_DIR;
 $mailTpl->result['uniformMail'] = '';
 $mailTpl->load_template('/uniform/' . $cfg['templateFolder'] . '/email.tpl');
 
 // Собираем все теги шаблона в массив
-$arTplTags = array();
+$arTplTags = [];
 $allMailFields = '';
 
 // Проверяем условия для селектов
+/** @var array $mailPost */
 $mailPost = setConditions($mailPost, 'select', $arSelectFields, $mailTpl);
 // // Проверяем условия для чекбоксов
 $mailPost = setConditions($mailPost, 'checkbox', $arCheckboxFields, $mailTpl);
 // // Проверяем условия для радиокнопок
 $mailPost = setConditions($mailPost, 'radio', $arRadioFields, $mailTpl);
 // // Проверяем условия для простых полей
-$mailPost = setConditions($mailPost, 'field', array(), $mailTpl);
+$mailPost = setConditions($mailPost, 'field', [], $mailTpl);
 
+/** @var array $arSendMail */
 foreach ($arSendMail as $tag => $value) {
 	if (!$cfg['sendAsPlain']) {
-		$value = str_replace(array("\r", "\n"), array('', '<br>'), $value);
+		$value = str_replace(["\r", "\n"], ['', '<br>'], $value);
 	}
 	$arTplTags['{' . $tag . '}'] = $value;
 
@@ -42,9 +44,10 @@ foreach ($arSendMail as $tag => $value) {
 	} else {
 		$mailTpl->set_block("'\\[{$tag}\\](.*?)\\[/{$tag}\\]'si", '');
 	}
-	$allMailFields .= '[' . $tag . ']{' . $tag . '}[/' . $tag . '] : ' .  $value . '<br>';
+	$allMailFields .= '[' . $tag . ']{' . $tag . '}[/' . $tag . '] : ' . $value . '<br>';
 }
 
+/** @var array $config */
 $mailTpl->set('{send_date}', date($config['timestamp_active'], time()));
 
 
@@ -54,7 +57,8 @@ $mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
 // Определяем заголовок письма
 preg_match("'\\[header\\](.*?)\\[\\/header\\]'si", $mailTpl->copy_template, $mailHeader);
 // Если передано поле header — подставим его в header :)
-$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header']) : trim($mailHeader[1]);
+$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header'])
+	: trim($mailHeader[1]);
 $emailHeader = stripslashes($emailHeader);
 
 // Обрабатываем теги шаблона
@@ -76,7 +80,7 @@ $message = preg_replace("'\\{\\*(.*?)\\*\\}'si", '', $message);
 
 $message = trim($message);
 if (!$cfg['sendAsPlain']) {
-	$message = str_replace(array("\r", "\n"), '', $message);
+	$message = str_replace(["\r", "\n"], '', $message);
 }
 $message = stripslashes($message);
 
@@ -97,6 +101,6 @@ if ($config['use_admin_mail'] && $config['version_id'] < 10.5) {
 }
 
 // Отправляем почту на указанные адреса
-foreach ($arMails as $k => $email) {
-	$k = $mail->send($email, $emailHeader, $message);
+foreach ($arMails as $email) {
+	$mail->send($email, $emailHeader, $message);
 }

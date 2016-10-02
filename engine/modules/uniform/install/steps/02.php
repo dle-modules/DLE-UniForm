@@ -31,7 +31,7 @@ return [
 <p>В каждом файле form.tpl вы сможете найти код, который необходимо вставить в шаблон.</p>
 <hr>
 <p>Для вывода формы непосредственно на старнице, а не во всплывающем окне, необходимо использовать следующий код:</p>
-<textarea readonly class="code" rows="6"><div data-uf-inline="/engine/ajax/uniform/uniform.php" data-uf-settings=\'{"formConfig": "inline"}\'>
+<textarea readonly class="code" rows="3"><div data-uf-inline="/engine/ajax/uniform/uniform.php" data-uf-settings=\'{"formConfig": "inline"}\'>
 	<div class="uf-inline-loading"></div>
 </div></textarea>
 	'
