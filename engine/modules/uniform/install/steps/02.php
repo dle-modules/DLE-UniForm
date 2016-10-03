@@ -21,6 +21,7 @@ return [
 <p>где feedback — папка с шаблонами формы. Из этой папки будет взят конфиг для формы.</p>
 <p>Так же в комплекте с формой поставляются формы:</p>
 <ul>
+	<li>attachments</li>
 	<li>callback</li>
 	<li>customheader</li>
 	<li>feedback</li>

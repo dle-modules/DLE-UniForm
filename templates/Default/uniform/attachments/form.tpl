@@ -1,11 +1,11 @@
 {* 
 	Для вывода кнопки открытия формы используем код:
-	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "attachments"}' class="uf-btn">Обратная связь</span> 
+	<span data-uf-open="/engine/ajax/uniform/uniform.php" data-uf-settings='{"formConfig": "attachments"}' class="uf-btn">Отправить файлы</span> 
 *}
 <div class="uf-wrapper">
 	<span class="mfp-close">&times;</span>
 	<div class="uf-header">
-		Обратная связь
+		Отправить файлы
 	</div>
 	[debug]<div class="uf-content">{debug}</div>[/debug]
 	[error]
@@ -15,36 +15,27 @@
 				[uf_token_error]
 					<li>Ошибка сессии, попробуйте ещё раз.</li>
 				[/uf_token_error]
-				[uf_error_email]
-					<li>Вы не указали email</li>
-				[/uf_error_email]
-				[uf_email_error]
-					<li>Проверьте правильность ввода email</li>
-				[/uf_email_error]
 			</ul>
 		</div>
 	[/error]
+	[attachments_error]
+		<div class="uf-alert uf-alert-info">
+			<b>Внимание</b> <br>
+			Некоторые файлы ({notAttachedFiles}) не были отправлены, возможно они имеют слишком большой размер или некорректный формат. 
+		</div>
+	[/attachments_error]
 	[success]
-		<div class="uf-content"><b>Спасибо за обращение!</b> <br> Если оно потребует ответа — мы свяжемся с вами</div>
+		<div class="uf-content"><b>Спасибо за файлы!</b> <br> Мы обязательно посмотрим Ваши картинки и удалим их в ближайшее время.</div>
 	[/success]
 	[form]
 		<div class="uf-content">		
 			<div class="uf-field">
 				<div class="uf-label">
-					Ваш email
-				</div>
-				<div class="uf-field-input">
-					<input class="uf-input uf-input-first [uf_error_email]uf-input-error[/uf_error_email] [uf_email_error]uf-input-error[/uf_email_error]" type="text" name="email" value="{uf_field_email}">
-				</div>
-			</div>
-			<div class="uf-field">
-				<div class="uf-label">
 					Файлы
 				</div>
 				<div class="uf-field-input">
-					<input class="uf-input" name="images" type="file">
-
-					<textarea class="uf-input [uf_error_textarea]uf-input-error[/uf_error_textarea]" name="textarea" cols="30" rows="10">{uf_field_textarea}</textarea>
+					<!-- {* Для  просмотра списка типов данных можно воспользоваться ссылкой: http://htmlbook.ru/html/value/mime *} -->
+					<input class="uf-input" name="images[]" type="file" accept="image/jpeg,image/png,image/gif" multiple>
 				</div>
 			</div>
 			<div class="uf-field">

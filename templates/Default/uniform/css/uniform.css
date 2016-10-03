@@ -112,6 +112,12 @@
 		color: #fff;
 	}
 
+	.uf-alert-info {
+		background: #ffecb3;
+		color: #424242;
+		font-weight: normal;
+	}
+
 	.uf-alert ul {
 		margin: 0 0 0 20px;
 	}
@@ -300,8 +306,8 @@
 	.mfp-counter {
 		-webkit-user-select: none;
 		   -moz-user-select: none;
-		        -ms-user-select: none;
-		    user-select: none;
+				-ms-user-select: none;
+			user-select: none;
 	}
 
 	.mfp-loading.mfp-figure {
@@ -569,8 +575,8 @@
 
 	@media screen and (max-width: 800px) and (orientation: landscape), screen and (max-height: 300px) {
 		/**
-	       * Remove all paddings around the image on small screen
-	       */
+		   * Remove all paddings around the image on small screen
+		   */
 		.mfp-img-mobile .mfp-image-holder {
 			padding-left: 0;
 			padding-right: 0;
@@ -618,17 +624,17 @@
 	@media all and (max-width: 900px) {
 		.mfp-arrow {
 			-webkit-transform: scale(.75);
-			        transform: scale(.75);
+					transform: scale(.75);
 		}
 
 		.mfp-arrow-left {
 			-webkit-transform-origin: 0;
-			        transform-origin: 0;
+					transform-origin: 0;
 		}
 
 		.mfp-arrow-right {
 			-webkit-transform-origin: 100%;
-			        transform-origin: 100%;
+					transform-origin: 100%;
 		}
 
 		.mfp-container {

@@ -17,15 +17,14 @@
 // sendAsPlain      — Отправлять сообщение как простой текст
 // sendToAuthor     — Отправить письмо автору новости, если есть newsId есть поле с name="newsId" и если автор разрешил получение писем с сайта.
 // allowAttachments — Разрешить прикрепление файлов (false)
-// allowedFileTypes — Разрешенные типы файлов, перечисляем расширения через запятую (из настроек движка)
+// maxFileSize      — Максимальный размер загружаемого файла (в килобайтах)
+// allowedFileTypes — Разрешенные типы файлов, перечисляем расширения через запятую, без точек и пробелов
 // -------------------------------------------
 
 
 templateFolder = attachments
-// nocache = y
-// debug = y
-required = textarea, email
-// hidden = newsid,user
 sendmail = y
-emails = mail@mail.ru, mail2@mail.ru
+emails = mail@mail.ru
 allowAttachments = y
+maxFileSize = 150
+allowedFileTypes = png,jpg,jpeg,gif

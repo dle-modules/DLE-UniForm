@@ -10,20 +10,16 @@
 if (!defined('DATALIFEENGINE')) {
 	die('Что то пошло не так');
 }
+
 /**
  * Информация из DLE, доступная в модуле
  *
- * @global boolean $is_logged           Является ли посетитель авторизованным пользователем или гостем.
- * @global array   $member_id           Массив с информацией о авторизованном пользователе, включая всю его информацию из профиля.
- * @global object  $db                  Класс DLE для работы с базой данных.
- * @global array   $cat_info            Информация обо всех категориях на сайте.
- * @global array   $config              Информация обо всех настройках скрипта.
- * @global array   $user_group          Информация о всех группах пользователей и их настройках.
- * @global integer $category_id         ID категории которую просматривает посетитель.
- * @global integer $_TIME               Содержит текущее время в UNIX формате с учетом настроек смещения в настройках скрипта.
- * @global array   $lang                Массив содержащий текст из языкового пакета.
- * @global boolean $smartphone_detected Если пользователь со смартфона - true.
- * @global string  $dle_module          Информация о просматриваемомразделе сайта, либо информацию переменной do из URL браузера.
+ * @global boolean $is_logged  Является ли посетитель авторизованным пользователем или гостем.
+ * @global array   $member_id  Массив с информацией о авторизованном пользователе, включая всю его информацию из профиля.
+ * @global object  $db         Класс DLE для работы с базой данных.
+ * @global array   $config     Информация обо всех настройках скрипта.
+ * @global array   $user_group Информация о всех группах пользователей и их настройках.
+ * @global integer $_TIME      Содержит текущее время в UNIX формате с учетом настроек смещения в настройках скрипта.
  */
 
 // Подключаем конфиг модуля
@@ -223,7 +219,77 @@ if (!$uniform) {
 				$tpl->copy_template = str_replace("{uf_field_{$k}}", $val, $tpl->copy_template);
 			}
 
+			// Массив для прикрепленных файлов
+			$arSendAttachments = [];
+			// Массив для файлов, не прикреплённых по разным причинам
+			$arNotAttachedFiles = [];
+			// Массив с разрешенными типами файлов
+			$arAllowedTypes = getArray($cfg['allowedFileTypes']);
+
+			// Проверяем вложения
+			if (isset($_FILES) && $gfg['allowAttachments']) {
+				foreach ($_FILES as $fileItem) {
+
+					if (is_array($fileItem['name'])) {
+						// Если массив — пробежимся по нему.
+						foreach ($fileItem['name'] as $i => $f) {
+							// Определяем тип файла
+							$ext = (new SplFileInfo($fileItem['name'][$i]))->getExtension();
+
+							// Если тип файла не в списке — идём дальше 
+							if (count($arAllowedTypes) && !in_array($ext, $arAllowedTypes)) {
+								$arNotAttachedFiles[] = $fileItem['name'][$i];
+								continue;
+							}
+
+							// Если есть ошибки — добавим в список имя ошибочного файла
+							if ($fileItem['error'][$i] > 0) {
+								$arNotAttachedFiles[] = $fileItem['name'][$i];
+							} else {
+								// Если ошибок не — можно отправлять такой файл
+								$arSendAttachments[] = [
+									'tmp_name' => $fileItem['tmp_name'][$i],
+									'name'     => $fileItem['name'][$i]
+								];
+							}
+						}
+
+					} else {
+						// Определяем тип файла
+						$ext = (new SplFileInfo($fileItem['name']))->getExtension();
+						// Если тип файла не в списке — идём дальше 
+						if (count($arAllowedTypes) && !in_array($ext, $arAllowedTypes)) {
+							$arNotAttachedFiles[] = $fileItem['name'];
+						} else {
+							// Если есть ошибки — добавим в список имя ошибочного файла
+							if ($fileItem['error'] > 0) {
+								$arNotAttachedFiles[] = $fileItem['name'];
+							} else {
+								// Если ошибок не — можно отправлять такой файл
+								$arSendAttachments[] = [
+									'tmp_name' => $fileItem['tmp_name'],
+									'name'     => $fileItem['name']
+								];
+							}
+						}
+
+					}
+				}
+			}
+
+			$arSendMail['notAttachedFiles'] = implode(', ', $arNotAttachedFiles);
+
+			if (count($arNotAttachedFiles)) {
+				$tpl->set('[attachments_error]', '');
+				$tpl->set('[/attachments_error]', '');
+				$tpl->set('{notAttachedFiles}', $arSendMail['notAttachedFiles']);
+			} else {
+				$tpl->set('{notAttachedFiles}', '');
+				$tpl->set_block("'\\[attachments_error\\](.*?)\\[/attachments_error\\]'si", '');
+			}
+
 			if ($error == false) {
+
 				// Если нет ошибок — значит форма отправлена удачно, нужно об этом сообщить
 				$tpl->copy_template = preg_replace("'\\{uf_field_(.*?)\\}'si", '', $tpl->copy_template);
 				$tpl->copy_template = preg_replace("'\\[uf_error_(.*?)\\](.*?)\\[/uf_error_(.*?)\\]'is", '', $tpl->copy_template);
@@ -262,10 +328,12 @@ if (!$uniform) {
 			$tpl->set_block("'\\[uf_token_error\\](.*?)\\[/uf_token_error\\]'si", '');
 			$tpl->set_block("'\\[success\\](.*?)\\[/success\\]'si", '');
 			$tpl->set_block("'\\[error\\](.*?)\\[/error\\]'si", '');
+			$tpl->set_block("'\\[attachments_error\\](.*?)\\[/attachments_error\\]'si", '');
 			$tpl->set('[form]', '');
 			$tpl->set('[/form]', '');
 			$tpl->set('[uf_default_value]', '');
 			$tpl->set('[/uf_default_value]', '');
+			$tpl->set('{notAttachedFiles}', '');
 
 			// Если пользователь авторизован — подставим его email в поле email.
 			if ($member_id['user_group'] !== 5) {
@@ -306,11 +374,21 @@ if (!$uniform) {
 		$uniform = '<b style="color:red">Отсутствует файл шаблона: ' . $config['skin'] . '/uniform/' . $cfg['templateFolder'] . '/form.tpl</b>';
 	}
 }
+// Добавляем спцальный атрибут для корректной загрузки файлов
+$multipart = ($cfg['allowAttachments']) ? 'enctype="multipart/form-data"' : '';
+
+// Добавляем инпут с указанием максимально возможного веса файла
+$cfg['maxFileSize'] = (int)$cfg['maxFileSize'];
+$maxFileSize = ($cfg['maxFileSize'] > 0) ? $cfg['maxFileSize'] : 0;
+
+
 $form = '
-	<form action="/engine/ajax/uniform/uniform.php" data-uf-form method="POST">
+	<form action="/engine/ajax/uniform/uniform.php" data-uf-form method="POST" ' . $multipart . '>
 	<input type="hidden" name="csrfToken" value="' . getToken($cacheName . $config['skin'] . $sessionId) . '">
 	<input type="hidden" name="formConfig" value="' . $cfg['formConfig'] . '">
 ';
+$form .= ($cfg['allowAttachments'] && $maxFileSize > 0)
+	? '<input type="hidden" name="MAX_FILE_SIZE" value="' . $maxFileSize * 1024 . '" />' : '';
 $form .= $hiddenInputs;
 $form .= $uniform;
 $form .= '</form>';

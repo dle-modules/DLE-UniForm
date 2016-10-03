@@ -15,6 +15,7 @@ if (!defined('DATALIFEENGINE')) {
 $mailTpl = new dle_template();
 $mailTpl->dir = TEMPLATE_DIR;
 $mailTpl->result['uniformMail'] = '';
+/** @var array $cfg */
 $mailTpl->load_template('/uniform/' . $cfg['templateFolder'] . '/email.tpl');
 
 // Собираем все теги шаблона в массив
@@ -97,6 +98,14 @@ if ($config['use_admin_mail'] && $config['version_id'] < 10.5) {
 		$mail->from = $arSendMail['email'];
 	} else {
 		$mail->from = $config['admin_mail'];
+	}
+}
+
+// Добавляем вложения
+/** @var array $arSendAttachments */
+if (count($arSendAttachments)) {
+	foreach ($arSendAttachments as $attach) {
+		$mail->addAttachment($attach['tmp_name'], $attach['name']);
 	}
 }
 
