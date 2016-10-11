@@ -25,5 +25,5 @@ $cfg = [
     'maxFileSize'      => !empty($maxFileSize) ? $maxFileSize : (isset($arConf['maxFileSize'])) ? $arConf['maxFileSize'] : false,
     'allowedFileTypes' => !empty($allowedFileTypes) ? $allowedFileTypes : (isset($arConf['allowedFileTypes'])) ? $arConf['allowedFileTypes'] : false,
     'version'          => '1.3.0',
-    'releaseDate'      => '04.10.2016',
+    'releaseDate'      => '11.10.2016',
 ];
