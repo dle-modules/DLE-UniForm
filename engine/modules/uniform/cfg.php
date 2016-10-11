@@ -21,6 +21,7 @@ $cfg = [
     'radioFields'      => !empty($radioFields) ? $radioFields : (isset($arConf['radioFields'])) ? $arConf['radioFields'] : false,
     'sendAsPlain'      => !empty($sendAsPlain) ? true : (isset($arConf['sendAsPlain'])) ? true : false,
     'sendToAuthor'     => !empty($sendToAuthor) ? true : (isset($arConf['sendToAuthor'])) ? true : false,
+    'sendToSender'     => !empty($sendToSender) ? true : (isset($arConf['sendToSender'])) ? true : false,
     'allowAttachments' => !empty($allowAttachments) ? true : (isset($arConf['allowAttachments'])) ? true : false,
     'maxFileSize'      => !empty($maxFileSize) ? $maxFileSize : (isset($arConf['maxFileSize'])) ? $arConf['maxFileSize'] : false,
     'allowedFileTypes' => !empty($allowedFileTypes) ? $allowedFileTypes : (isset($arConf['allowedFileTypes'])) ? $arConf['allowedFileTypes'] : false,

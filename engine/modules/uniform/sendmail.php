@@ -239,7 +239,40 @@ if (count($arSendAttachments)) {
 	}
 }
 
+if ($cfg['sendToSender'] && (isset($arSendMail['email']) && validEmain($arSendMail['email']))) {
+	$arMails[] = $arSendMail['email'];
+}
+
 // Отправляем почту на указанные адреса
 foreach ($arMails as $email) {
-	$mail->send($email, $emailHeader, $message);
+	// Обрабатываем ситуацию, когда разрешена отправка отправителю
+	if ($cfg['sendToSender']) {
+		$parsedMessage = $message;
+		$parsedHeader = $emailHeader;
+
+		if ($email == $arSendMail['email']) {
+			$parsedMessage = preg_replace("'\\[not_to_sender\\](.*?)\\[/not_to_sender\\]'is", '', $parsedMessage);
+			$parsedMessage = str_replace('[to_sender]', '', $parsedMessage);
+			$parsedMessage = str_replace('[/to_sender]', '', $parsedMessage);
+
+			$parsedHeader = preg_replace("'\\[not_to_sender\\](.*?)\\[/not_to_sender\\]'is", '', $parsedHeader);
+			$parsedHeader = str_replace('[to_sender]', '', $parsedHeader);
+			$parsedHeader = str_replace('[/to_sender]', '', $parsedHeader);
+
+		} else {
+
+			$parsedMessage = preg_replace("'\\[to_sender\\](.*?)\\[/to_sender\\]'is", '', $parsedMessage);
+			$parsedMessage = str_replace('[not_to_sender]', '', $parsedMessage);
+			$parsedMessage = str_replace('[/not_to_sender]', '', $parsedMessage);
+
+			$parsedHeader = preg_replace("'\\[to_sender\\](.*?)\\[/to_sender\\]'is", '', $parsedHeader);
+			$parsedHeader = str_replace('[not_to_sender]', '', $parsedHeader);
+			$parsedHeader = str_replace('[/not_to_sender]', '', $parsedHeader);
+		}
+
+		$mail->send($email, $parsedHeader, $parsedMessage);
+	} else {
+		$mail->send($email, $emailHeader, $message);
+	}
+
 }
