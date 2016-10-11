@@ -52,7 +52,7 @@
 					&nbsp;
 				</div>
 				<div class="uf-field-input">
-					<button class="uf-btn ladda-button" type="submit" data-style="zoom-out"><span class="ladda-label">Отправить ещё</span></button>
+					<button class="uf-btn ladda-button" type="submit" data-style="zoom-in"><span class="ladda-label">Отправить ещё</span></button>
 				</div>
 			</div>
 		</div>
@@ -80,7 +80,7 @@
 					&nbsp;
 				</div>
 				<div class="uf-field-input">
-					<button class="uf-btn ladda-button" type="submit" data-style="zoom-out"><span class="ladda-label">Отправить</span></button>
+					<button class="uf-btn ladda-button" type="submit" data-style="zoom-in"><span class="ladda-label">Отправить</span></button>
 				</div>
 			</div>
 		</div>

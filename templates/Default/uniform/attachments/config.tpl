@@ -23,10 +23,9 @@
 // -------------------------------------------
 
 
-templateFolder = callback
-// nocache = y
-// debug = y
-required = phone
-selectFields = calltime
+templateFolder = attachments
 sendmail = y
 emails = mail@mail.ru
+allowAttachments = y
+maxFileSize = 150
+allowedFileTypes = png,jpg,jpeg,gif

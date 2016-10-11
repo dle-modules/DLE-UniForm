@@ -1,16 +1,11 @@
 /*!
-=============================================================================
-UniForm - унверсальные формы для DLE
-=============================================================================
-Автор:   ПафНутиЙ
-URL:     http://pafnuty.name/
-twitter: https://twitter.com/pafnuty_name
-google+: http://gplus.to/pafnuty
-email:   pafnuty10@gmail.com
-=============================================================================
+ * DLE UniForm — унверсальные формы для DLE
+ *
+ * @author     ПафНутиЙ <pafnuty10@gmail.com>
+ * @link       http://pafnuty.name/
+ * @link       https://twitter.com/pafnuty_name
  */
 
-// Экономим памть браузера.
 var doc = $(document);
 
 doc
@@ -79,28 +74,22 @@ function ufDone(responseText, statusText, xhr, $form) {
 	}
 }
 
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	var $inlineUniform = $('[data-uf-inline]');
 	if ($inlineUniform.length) {
-		$.each($inlineUniform, function(index, val) {
+		$.each($inlineUniform, function (index, val) {
 			var $this = $(this),
-			url = $this.data('ufInline'),
-			data = $this.data('ufSettings');
+				url = $this.data('ufInline'),
+				data = $this.data('ufSettings');
 
 			$.ajax({
-				url: url,
-				data: data,
-			})
-			.done(function(data) {
-				$this.html(data);
-			})
-			.fail(function() {
-				console.log("error");
-			})
-			.always(function() {
-				console.log("complete");
-			});
-			
+					url: url,
+					data: data,
+				})
+				.done(function (data) {
+					$this.html(data);
+				});
+
 		});
 	};
 });
