@@ -119,6 +119,12 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 	if ($is_logged and $member_id['banned'] == 'yes') {
 		die("error_ban");
 	}
+	// Определяемся с шаблоном сайта
+	// Проверим куку пользователя и налочие параметра skin в реквесте.
+	$currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false))
+		: ((isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin']);
+
+	$config['skin'] = ($currentSiteSkin == '') ? $config['skin'] : $currentSiteSkin;
 
 	$template_dir = ROOT_DIR . 'templates/' . $config['skin'];
 

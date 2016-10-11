@@ -39,6 +39,13 @@ $hiddenInputs = '';
 // Если данные передаются постом — "запомним" это.
 $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST') ? true : false;
 
+// Определяемся с шаблоном сайта
+// Проверим куку пользователя и налочие параметра skin в реквесте.
+$currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false))
+	: ((isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin']);
+
+$config['skin'] = ($currentSiteSkin == '') ? $config['skin'] : $currentSiteSkin;
+
 if (!$cfg['nocache'] && !$isPost) {
 	// Проверим кеш, если это требуется
 	$uniform = dle_cache($cfg['role'], $cacheName . $config['skin'], true);
