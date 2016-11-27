@@ -218,7 +218,7 @@ if (!$uniform) {
 			$arAllowedTypes = getArray($cfg['allowedFileTypes']);
 
 			// Проверяем вложения
-			if (isset($_FILES) && $gfg['allowAttachments']) {
+			if (isset($_FILES) && $cfg['allowAttachments']) {
 				foreach ($_FILES as $fileItem) {
 
 					if (is_array($fileItem['name'])) {
