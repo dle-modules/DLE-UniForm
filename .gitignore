@@ -8,6 +8,13 @@
 /engine/data/*.txt
 /engine/data/*.php
 
+# DLE 11.2 sources
+/engine/ajax/commentssubscribe.php
+/engine/ajax/twofactor.php
+/engine/inc/lostpassword.php
+/engine/inc/twofactor.php
+/engine/classes/htmlpurifier/*
+
 # DLE 11.1 sources
 /.htaccess
 /admin.php

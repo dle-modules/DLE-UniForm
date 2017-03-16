@@ -22,15 +22,15 @@ return [
 	'moduleDescr'   => 'Унверсальные формы для DLE',
 
 	// Версия модуля
-	'moduleVersion' => '1.3.0',
+	'moduleVersion' => '1.4.0',
 
 	// Дата выпуска модуля
-	'moduleDate'    => '01.10.2016',
+	'moduleDate'    => '16.03.2017',
 
 	// Версии DLE, поддержваемые модулем
 	'minVersion'    => '10.2',
 
-	'maxVersion'    => '11.1',
+	'maxVersion'    => '',
 
 	// Устанавливать админку (true/false). Включает показ кнопки установки и удаления админки.
 	'installAdmin'  => false,

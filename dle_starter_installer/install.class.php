@@ -111,11 +111,11 @@ class dleStarterInstaller {
 				throw new Exception('Установленная версия DLE слишком старая. Необходимо установить DLE не ниже ' . $this->cfg['minVersion']);
 			}
 
-			if ($this->dle_config['version_id'] > $this->cfg['maxVersion']) {
+			if ($this->cfg['maxVersion'] !== '' && $this->dle_config['version_id'] > $this->cfg['maxVersion']) {
 				throw new Exception('Установленная версия DLE слишком новая. Необходимо установить DLE не выше ' . $this->cfg['maxVersion']);
 			}
 		} else {
-			throw new Exception('Файл с конфигурацией установки модуля не найден, возмжно установочные файлы модуля не скопированы.');
+			throw new Exception('Файл с конфигурацией установки модуля не найден, возмжно установочные файлы модуля не скопированы. <br>Возможно вы не вписали параметр <b>?module=module_name</b> в конце URL. (module_name — это идентификатор модуля. Если Вы его не знаете, то можете спросить у автора модуля).');
 		}
 	}
 
