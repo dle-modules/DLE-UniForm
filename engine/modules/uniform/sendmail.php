@@ -15,7 +15,8 @@ if (!defined('DATALIFEENGINE')) {
  * Информация из DLE, доступная в модуле
  *
  * @global boolean $is_logged  Является ли посетитель авторизованным пользователем или гостем.
- * @global array   $member_id  Массив с информацией о авторизованном пользователе, включая всю его информацию из профиля.
+ * @global array   $member_id  Массив с информацией о авторизованном пользователе, включая всю его информацию из
+ *         профиля.
  * @global object  $db         Класс DLE для работы с базой данных.
  * @global array   $config     Информация обо всех настройках скрипта.
  * @global array   $user_group Информация о всех группах пользователей и их настройках.
@@ -43,14 +44,14 @@ if (!$user_group) {
 }
 
 
-$mailTpl = new dle_template();
-$mailTpl->dir = TEMPLATE_DIR;
+$mailTpl                        = new dle_template();
+$mailTpl->dir                   = TEMPLATE_DIR;
 $mailTpl->result['uniformMail'] = '';
 /** @var array $cfg */
 $mailTpl->load_template('/uniform/' . $cfg['templateFolder'] . '/email.tpl');
 
 // Собираем все теги шаблона в массив
-$arTplTags = [];
+$arTplTags     = [];
 $allMailFields = '';
 
 // Проверяем условия для селектов
@@ -65,26 +66,26 @@ $mailPost = setConditions($mailPost, 'field', [], $mailTpl);
 
 /** @var array $member_id */
 if ($member_id['user_group'] == 5) {
-	$arSendMail['user_email'] = '';
-	$arSendMail['user_name'] = '';
-	$arSendMail['user_news_num'] = '';
-	$arSendMail['user_comm_num'] = '';
-	$arSendMail['user_group'] = 5;
-	$arSendMail['user_lastdate'] = '';
-	$arSendMail['user_reg_date'] = '';
-	$arSendMail['user_banned'] = '';
+	$arSendMail['user_email']      = '';
+	$arSendMail['user_name']       = '';
+	$arSendMail['user_news_num']   = '';
+	$arSendMail['user_comm_num']   = '';
+	$arSendMail['user_group']      = 5;
+	$arSendMail['user_lastdate']   = '';
+	$arSendMail['user_reg_date']   = '';
+	$arSendMail['user_banned']     = '';
 	$arSendMail['user_allow_mail'] = '';
-	$arSendMail['user_info'] = '';
-	$arSendMail['user_signature'] = '';
-	$arSendMail['user_foto'] = '';
-	$arSendMail['user_fullname'] = '';
-	$arSendMail['user_land'] = '';
-	$arSendMail['user_favorites'] = '';
-	$arSendMail['user_pm_all'] = '';
-	$arSendMail['user_pm_unread'] = '';
+	$arSendMail['user_info']       = '';
+	$arSendMail['user_signature']  = '';
+	$arSendMail['user_foto']       = '';
+	$arSendMail['user_fullname']   = '';
+	$arSendMail['user_land']       = '';
+	$arSendMail['user_favorites']  = '';
+	$arSendMail['user_pm_all']     = '';
+	$arSendMail['user_pm_unread']  = '';
 	$arSendMail['user_time_limit'] = '';
-	$arSendMail['user_logged_ip'] = '';
-	$arSendMail['user_timezone'] = '';
+	$arSendMail['user_logged_ip']  = '';
+	$arSendMail['user_timezone']   = '';
 } else {
 	$userRow = $db->super_query("SELECT * FROM " . USERPREFIX . "_users WHERE name = '{$member_id['name']}'");
 
@@ -110,32 +111,32 @@ if ($member_id['user_group'] == 5) {
 			}
 		}
 
-		$arSendMail['user_email'] = $userRow['email'];
-		$arSendMail['user_name'] = $userRow['name'];
-		$arSendMail['user_news_num'] = $userRow['news_num'];
-		$arSendMail['user_comm_num'] = $userRow['comm_num'];
-		$arSendMail['user_group'] = $userRow['group'];
-		$arSendMail['user_lastdate'] = $userRow['lastdate'];
-		$arSendMail['user_reg_date'] = $userRow['reg_date'];
-		$arSendMail['user_banned'] = $userRow['banned'];
+		$arSendMail['user_email']      = $userRow['email'];
+		$arSendMail['user_name']       = $userRow['name'];
+		$arSendMail['user_news_num']   = $userRow['news_num'];
+		$arSendMail['user_comm_num']   = $userRow['comm_num'];
+		$arSendMail['user_group']      = $userRow['group'];
+		$arSendMail['user_lastdate']   = $userRow['lastdate'];
+		$arSendMail['user_reg_date']   = $userRow['reg_date'];
+		$arSendMail['user_banned']     = $userRow['banned'];
 		$arSendMail['user_allow_mail'] = $userRow['allow_mail'];
-		$arSendMail['user_info'] = stripslashes($userRow['info']);
-		$arSendMail['user_signature'] = stripslashes($userRow['signature']);
-		$arSendMail['user_foto'] = $userPhoto;
-		$arSendMail['user_fullname'] = stripslashes($userRow['fullname']);
-		$arSendMail['user_land'] = stripslashes($userRow['land']);
-		$arSendMail['user_favorites'] = $userRow['favorites'];
-		$arSendMail['user_pm_all'] = $userRow['pm_all'];
-		$arSendMail['user_pm_unread'] = $userRow['pm_unread'];
+		$arSendMail['user_info']       = stripslashes($userRow['info']);
+		$arSendMail['user_signature']  = stripslashes($userRow['signature']);
+		$arSendMail['user_foto']       = $userPhoto;
+		$arSendMail['user_fullname']   = stripslashes($userRow['fullname']);
+		$arSendMail['user_land']       = stripslashes($userRow['land']);
+		$arSendMail['user_favorites']  = $userRow['favorites'];
+		$arSendMail['user_pm_all']     = $userRow['pm_all'];
+		$arSendMail['user_pm_unread']  = $userRow['pm_unread'];
 		$arSendMail['user_time_limit'] = $userRow['time_limit'];
-		$arSendMail['user_logged_ip'] = $userRow['logged_ip'];
-		$arSendMail['user_timezone'] = $userRow['timezone'];
+		$arSendMail['user_logged_ip']  = $userRow['logged_ip'];
+		$arSendMail['user_timezone']   = $userRow['timezone'];
 
 
 		// Выводим данные из допполей пользователя
 		if (strpos($mailTpl->copy_template, 'user_xfield_') !== false || strpos($mailTpl->copy_template, 'all_mail_fields') !== false) {
 
-			$xfields = xfieldsload(true);
+			$xfields     = xfieldsload(true);
 			$xfieldsdata = xfieldsdataload($userRow['xfields']);
 
 			foreach ($xfields as $value) {
@@ -188,14 +189,18 @@ $mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
 // Определяем заголовок письма
 preg_match("'\\[header\\](.*?)\\[\\/header\\]'si", $mailTpl->copy_template, $mailHeader);
 // Если передано поле header — подставим его в header :)
-$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header'])
-	: trim($mailHeader[1]);
+$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header']) : trim($mailHeader[1]);
 $emailHeader = stripslashes($emailHeader);
 
 // Обрабатываем теги шаблона
 $mailTpl->set('', $arTplTags);
 // Тег всех полей, пришедщших из формы
 $mailTpl->set('{all_mail_fields}', $allMailFields);
+
+// Подключаем дополнительный модуль, если это указано в конфиге
+if ($cfg['parseSendMail']) {
+	include ENGINE_DIR . '/modules/' . $cfg['parseSendMail'] . '.php';
+}
 
 // Компилим шаблон
 $mailTpl->compile('uniformMail');
@@ -218,7 +223,7 @@ $message = stripslashes($message);
 // Подключаем класс для отправки почты.
 include_once ENGINE_DIR . '/classes/mail.class.php';
 $asHtml = ($cfg['sendAsPlain']) ? false : true;
-$mail = new dle_mail($config, $asHtml);
+$mail   = new dle_mail($config, $asHtml);
 
 // Определяем параметры отправки письма
 if ($config['use_admin_mail'] && $config['version_id'] < 10.5) {
@@ -248,7 +253,7 @@ foreach ($arMails as $email) {
 	// Обрабатываем ситуацию, когда разрешена отправка отправителю
 	if ($cfg['sendToSender']) {
 		$parsedMessage = $message;
-		$parsedHeader = $emailHeader;
+		$parsedHeader  = $emailHeader;
 
 		if ($email == $arSendMail['email']) {
 			$parsedMessage = preg_replace("'\\[not_to_sender\\](.*?)\\[/not_to_sender\\]'is", '', $parsedMessage);

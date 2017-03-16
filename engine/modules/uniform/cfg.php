@@ -25,6 +25,7 @@ $cfg = [
     'allowAttachments' => !empty($allowAttachments) ? true : (isset($arConf['allowAttachments'])) ? true : false,
     'maxFileSize'      => !empty($maxFileSize) ? $maxFileSize : (isset($arConf['maxFileSize'])) ? $arConf['maxFileSize'] : false,
     'allowedFileTypes' => !empty($allowedFileTypes) ? $allowedFileTypes : (isset($arConf['allowedFileTypes'])) ? $arConf['allowedFileTypes'] : false,
-    'version'          => '1.3.0',
-    'releaseDate'      => '12.10.2016',
+    'parseSendMail'    => !empty($parseSendMail) ? $parseSendMail : (isset($arConf['parseSendMail'])) ? $arConf['parseSendMail'] : false,
+    'version'          => '1.4.0',
+    'releaseDate'      => '16.03.2017',
 ];

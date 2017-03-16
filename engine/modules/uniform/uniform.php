@@ -15,7 +15,8 @@ if (!defined('DATALIFEENGINE')) {
  * Информация из DLE, доступная в модуле
  *
  * @global boolean $is_logged  Является ли посетитель авторизованным пользователем или гостем.
- * @global array   $member_id  Массив с информацией о авторизованном пользователе, включая всю его информацию из профиля.
+ * @global array   $member_id  Массив с информацией о авторизованном пользователе, включая всю его информацию из
+ *         профиля.
  * @global object  $db         Класс DLE для работы с базой данных.
  * @global array   $config     Информация обо всех настройках скрипта.
  * @global array   $user_group Информация о всех группах пользователей и их настройках.
@@ -34,15 +35,14 @@ $cacheName = md5(implode('_', $cfg));
 // ID сессии
 $sessionId = session_id();
 
-$uniform = false;
+$uniform      = false;
 $hiddenInputs = '';
 // Если данные передаются постом — "запомним" это.
 $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST') ? true : false;
 
 // Определяемся с шаблоном сайта
 // Проверим куку пользователя и налочие параметра skin в реквесте.
-$currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false))
-	: ((isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin']);
+$currentSiteSkin = (isset($_COOKIE['dle_skin'])) ? trim(totranslit($_COOKIE['dle_skin'], false, false)) : ((isset($_REQUEST['skin'])) ? trim(totranslit($_REQUEST['skin'], false, false)) : $config['skin']);
 
 $config['skin'] = ($currentSiteSkin == '') ? $config['skin'] : $currentSiteSkin;
 
@@ -53,7 +53,7 @@ if (!$cfg['nocache'] && !$isPost) {
 if (!$uniform) {
 	if (!defined('TEMPLATE_DIR')) {
 		require_once ENGINE_DIR . '/classes/templates.class.php';
-		$tpl = new dle_template();
+		$tpl      = new dle_template();
 		$tpl->dir = $template_dir;
 		define('TEMPLATE_DIR', $tpl->dir);
 	}
@@ -67,7 +67,7 @@ if (!$uniform) {
 		$arHidden = getArray($cfg['hidden']);
 
 		// Дебаг
-		$debug = ($cfg['debug']) ? true : false;
+		$debug    = ($cfg['debug']) ? true : false;
 		$debugTag = '';
 		if ($debug) {
 			$tpl->set('[debug]', '');
@@ -129,9 +129,9 @@ if (!$uniform) {
 			}
 
 			// Добавляем данные из конфига DLE для возможности использовать в email сообщении
-			$_POST['site_home_title'] = $config['home_title'];
+			$_POST['site_home_title']    = $config['home_title'];
 			$_POST['site_http_home_url'] = $config['http_home_url'];
-			$_POST['site_short_title'] = $config['short_title'];
+			$_POST['site_short_title']   = $config['short_title'];
 
 			// Получаем массив обязательных полей
 			$arRequired = getArray($cfg['required']);
@@ -162,8 +162,8 @@ if (!$uniform) {
 				}
 				// Остальные поля надо бы обработать
 				if (!is_array($val)) {
-					$val = convert_unicode($val, $config['charset']);
-					$val = $parse->process(trim($val));
+					$val            = convert_unicode($val, $config['charset']);
+					$val            = $parse->process(trim($val));
 					$arSendMail[$k] = $val;
 				}
 
@@ -370,7 +370,7 @@ $multipart = ($cfg['allowAttachments']) ? 'enctype="multipart/form-data"' : '';
 
 // Добавляем инпут с указанием максимально возможного веса файла
 $cfg['maxFileSize'] = (int)$cfg['maxFileSize'];
-$maxFileSize = ($cfg['maxFileSize'] > 0) ? $cfg['maxFileSize'] : 0;
+$maxFileSize        = ($cfg['maxFileSize'] > 0) ? $cfg['maxFileSize'] : 0;
 
 
 $form = '
@@ -378,8 +378,7 @@ $form = '
 	<input type="hidden" name="csrfToken" value="' . getToken($cacheName . $config['skin'] . $sessionId) . '">
 	<input type="hidden" name="formConfig" value="' . $cfg['formConfig'] . '">
 ';
-$form .= ($cfg['allowAttachments'] && $maxFileSize > 0)
-	? '<input type="hidden" name="MAX_FILE_SIZE" value="' . $maxFileSize * 1024 . '" />' : '';
+$form .= ($cfg['allowAttachments'] && $maxFileSize > 0) ? '<input type="hidden" name="MAX_FILE_SIZE" value="' . $maxFileSize * 1024 . '" />' : '';
 $form .= $hiddenInputs;
 $form .= $uniform;
 $form .= '</form>';
