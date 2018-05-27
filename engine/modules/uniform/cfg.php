@@ -26,6 +26,6 @@ $cfg = [
     'maxFileSize'      => !empty($maxFileSize) ? $maxFileSize : (isset($arConf['maxFileSize'])) ? $arConf['maxFileSize'] : false,
     'allowedFileTypes' => !empty($allowedFileTypes) ? $allowedFileTypes : (isset($arConf['allowedFileTypes'])) ? $arConf['allowedFileTypes'] : false,
     'parseSendMail'    => !empty($parseSendMail) ? $parseSendMail : (isset($arConf['parseSendMail'])) ? $arConf['parseSendMail'] : false,
-    'version'          => '1.4.0',
-    'releaseDate'      => '16.03.2017',
+    'version'          => '1.4.1',
+    'releaseDate'      => '27.05.2018',
 ];

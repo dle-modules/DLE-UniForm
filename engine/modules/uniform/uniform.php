@@ -51,6 +51,11 @@ if (!$cfg['nocache'] && !$isPost) {
 	$uniform = dle_cache($cfg['role'], $cacheName . $config['skin'], true);
 }
 if (!$uniform) {
+	// Совместимость с DLE 13.x
+	if (file_exists(ENGINE_DIR . '/classes/plugins.class.php')) {
+		require_once ENGINE_DIR . '/classes/plugins.class.php';
+	}
+
 	if (!defined('TEMPLATE_DIR')) {
 		require_once ENGINE_DIR . '/classes/templates.class.php';
 		$tpl      = new dle_template();
@@ -227,7 +232,7 @@ if (!$uniform) {
 							// Определяем тип файла
 							$ext = (new SplFileInfo($fileItem['name'][$i]))->getExtension();
 
-							// Если тип файла не в списке — идём дальше 
+							// Если тип файла не в списке — идём дальше
 							if (count($arAllowedTypes) && !in_array($ext, $arAllowedTypes)) {
 								$arNotAttachedFiles[] = $fileItem['name'][$i];
 								continue;
@@ -248,7 +253,7 @@ if (!$uniform) {
 					} else {
 						// Определяем тип файла
 						$ext = (new SplFileInfo($fileItem['name']))->getExtension();
-						// Если тип файла не в списке — идём дальше 
+						// Если тип файла не в списке — идём дальше
 						if (count($arAllowedTypes) && !in_array($ext, $arAllowedTypes)) {
 							$arNotAttachedFiles[] = $fileItem['name'];
 						} else {
