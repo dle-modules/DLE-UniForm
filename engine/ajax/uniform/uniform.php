@@ -34,6 +34,9 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
 	require_once ENGINE_DIR . '/classes/mysql.php';
 	require_once ENGINE_DIR . '/data/dbconfig.php';
+	if (file_exists(ENGINE_DIR . '/classes/plugins.class.php')) {
+	    require_once ENGINE_DIR . '/classes/plugins.class.php';
+	}
 	require_once ENGINE_DIR . '/modules/functions.php';
 
 	dle_session();

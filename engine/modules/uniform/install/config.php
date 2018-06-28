@@ -22,10 +22,10 @@ return [
 	'moduleDescr'   => 'Унверсальные формы для DLE',
 
 	// Версия модуля
-	'moduleVersion' => '1.4.1',
+	'moduleVersion' => '1.4.2',
 
 	// Дата выпуска модуля
-	'moduleDate'    => '27.05.2018',
+	'moduleDate'    => '28.06.2018',
 
 	// Версии DLE, поддержваемые модулем
 	'minVersion'    => '10.2',
