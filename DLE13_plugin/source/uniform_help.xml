@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dleplugin>
+	<name>UNIFORM_help by TCSE-cms.com</name>
+	<description>Справка по установке модуля DLE-Uniform от Pafnuty</description>
+	<icon>engine/skins/images/uniform_help.png</icon>
+	<version>1.1.2</version>
+	<dleversion>13.3</dleversion>
+	<versioncompare>greater</versioncompare>
+	<upgradeurl></upgradeurl>
+	<filedelete>0</filedelete>
+	<needplugin></needplugin>
+	<mnotice>1</mnotice>
+	<mysqlinstall><![CDATA[INSERT INTO `{prefix}_admin_sections` (`name`, `title`, `descr`, `icon`, `allow_groups`) VALUES ('uniform_help', 'Формы связи Uniform Help', 'Справочная информация модуля DLE-Uniform', 'engine/skins/images/uniform_help.png', '1')]]></mysqlinstall>
+	<mysqlupgrade><![CDATA[]]></mysqlupgrade>
+	<mysqlenable><![CDATA[]]></mysqlenable>
+	<mysqldisable><![CDATA[]]></mysqldisable>
+	<mysqldelete><![CDATA[DELETE FROM `{prefix}_admin_sections` WHERE name='uniform_help']]></mysqldelete>
+	<phpinstall><![CDATA[]]></phpinstall>
+	<phpupgrade><![CDATA[]]></phpupgrade>
+	<phpenable><![CDATA[]]></phpenable>
+	<phpdisable><![CDATA[]]></phpdisable>
+	<phpdelete><![CDATA[]]></phpdelete>
+	<notice><![CDATA[Админка в разделе: [b]Сторонние модули[/b] -> [b]DLE-Uniform Help[/b]]]></notice>
+</dleplugin>
