@@ -17,8 +17,8 @@ if (!defined('DATALIFEENGINE')) {
 /**
  * Получение массиа из строки конфига
  *
- * @param  string $string    Строка конфига
- * @param  string $delimiter Разделитель массива
+ * @param  string  $string  Строка конфига
+ * @param  string  $delimiter  Разделитель массива
  *
  * @return array             Массив
  */
@@ -34,7 +34,7 @@ function getArray($string, $delimiter = ',') {
 /**
  * Получение зашифрованного CSRF-токена
  *
- * @param  string $string Токен
+ * @param  string  $string  Токен
  *
  * @return string         Зашифрованный токен
  */
@@ -45,8 +45,8 @@ function getToken($string) {
 /**
  * Валидация CSRF-токена
  *
- * @param  string $first  Первый токен
- * @param  string $second Второй токен
+ * @param  string  $first  Первый токен
+ * @param  string  $second  Второй токен
  *
  * @return bool           true|false
  */
@@ -61,7 +61,7 @@ function checkToken($first, $second) {
 /**
  * Валидация email-адреса
  *
- * @param  string $email Email-адрес
+ * @param  string  $email  Email-адрес
  *
  * @return bool          true|false
  */
@@ -74,8 +74,8 @@ function validEmain($email) {
 /**
  * Добавляем скрытые поля в форму
  *
- * @param  array $arFields     Поля, разрешенные в конфиге
- * @param  array $requestArray поля из реквеста
+ * @param  array  $arFields  Поля, разрешенные в конфиге
+ * @param  array  $requestArray  поля из реквеста
  *
  * @return string Поля, добавляемые в форму
  */
@@ -86,7 +86,8 @@ function addHiddenFields($arFields = [], $requestArray = []) {
 		foreach ($arFields as $field) {
 			if (array_key_exists($field, $requestArray)) {
 				// @TODO - проработать вопрос безопасности такой конструкции.
-				$hiddenInputs .= '<input type="hidden" name="' . $field . '" value="' . $db->safesql($requestArray[$field]) . '">';
+				$hiddenInputs .= '<input type="hidden" name="'.$field.'" value="'.$db->safesql($requestArray[$field])
+					.'">';
 				$hiddenInputs .= "\n";
 			}
 		}
@@ -99,13 +100,13 @@ function addHiddenFields($arFields = [], $requestArray = []) {
  * Функция для назначения тегов, обрабатывающих селекты, чекбоксы и радиокнопки.
  * Код вынесен в функцию для избежания дублирования.
  *
- * @param  string  $k          Имя поля
- * @param  string  $val        Значение поля
+ * @param  string  $k  Имя поля
+ * @param  string  $val  Значение поля
  * @param  string  $fieldType  Тип поля
- * @param  array   $arFields   Массив, содержащий разрешенные ключи
- * @param  boolean $parse      Объект класса parse.class.php
- * @param  boolean $tpl        Объект шаблонизатора
- * @param  array   $arSendMail Массив, отправляемый обработчику email
+ * @param  array  $arFields  Массив, содержащий разрешенные ключи
+ * @param  boolean  $parse  Объект класса parse.class.php
+ * @param  boolean  $tpl  Объект шаблонизатора
+ * @param  array  $arSendMail  Массив, отправляемый обработчику email
  *
  * @return array Массив для отправки по email
  */
@@ -129,7 +130,7 @@ function assignFiedls(
 				$valvalue = convert_unicode($valvalue, $config['charset']);
 				$valvalue = $parse->process(trim($valvalue));
 				// Добавим значение в массив для последующей отправки на email в нормальном виде.
-				$arSendMailTmp[] = $valvalue;
+				$arSendMailTmp[]    = $valvalue;
 				$tpl->copy_template = str_replace("[uf_{$fieldType}_{$k}_{$valvalue}]", '', $tpl->copy_template);
 				$tpl->copy_template = str_replace("[/uf_{$fieldType}_{$k}_{$valvalue}]", '', $tpl->copy_template);
 			}
@@ -140,10 +141,12 @@ function assignFiedls(
 			$tpl->copy_template = str_replace("[/uf_{$fieldType}_{$k}_{$val}]", '', $tpl->copy_template);
 		}
 
-		$tpl->copy_template = preg_replace("'\\[uf_{$fieldType}_{$k}_(.*?)\\](.*?)\\[/uf_{$fieldType}_{$k}_(.*?)\\]'is", '', $tpl->copy_template);
+		$tpl->copy_template = preg_replace("'\\[uf_{$fieldType}_{$k}_(.*?)\\](.*?)\\[/uf_{$fieldType}_{$k}_(.*?)\\]'is",
+			'', $tpl->copy_template);
 	} else {
 		// Удалем теги, которые не должны показываться
-		$tpl->copy_template = preg_replace("'\\[uf_{$fieldType}_{$k}_(.*?)\\](.*?)\\[/uf_{$fieldType}_{$k}_(.*?)\\]'is", '', $tpl->copy_template);
+		$tpl->copy_template = preg_replace("'\\[uf_{$fieldType}_{$k}_(.*?)\\](.*?)\\[/uf_{$fieldType}_{$k}_(.*?)\\]'is",
+			'', $tpl->copy_template);
 	}
 
 	return $arSendMail;
@@ -152,10 +155,10 @@ function assignFiedls(
 /**
  * Обрабатываем теги с условиями вывода
  *
- * @param array  $data      массив с данными
- * @param string $fieldType Тип поля
- * @param array  $arFields  массив с полями, относящимися к выбранному типу поля
- * @param obgect $tpl       Объект шаблонизатора
+ * @param  array  $data  массив с данными
+ * @param  string  $fieldType  Тип поля
+ * @param  array  $arFields  массив с полями, относящимися к выбранному типу поля
+ * @param  obgect  $tpl  Объект шаблонизатора
  *
  * @return array Массив с удалёнными обработанными данными
  */
@@ -166,7 +169,9 @@ function setConditions($data, $fieldType = '', $arFields = [], $tpl = false) {
 		foreach ($data as $k => $val) {
 			if (in_array($k, $arFields) || $fieldType == 'field') {
 				// Если поле находится в массиве разрешенных полей или является текстовым — работаем
-				if (preg_match_all("#\\[uf_{$fieldType}_{$k}=['\"](.+?)['\"]\\](.+?)\\[/uf_{$fieldType}_{$k}\\]#si", $tpl->copy_template, $matches)) {
+				if (preg_match_all("#\\[uf_{$fieldType}_{$k}=['\"](.+?)['\"]\\](.+?)\\[/uf_{$fieldType}_{$k}\\]#si",
+					$tpl->copy_template, $matches)
+				) {
 					// Проверем совпадения
 					foreach ($matches[1] as $key => $match) {
 						if (is_array($val)) {
