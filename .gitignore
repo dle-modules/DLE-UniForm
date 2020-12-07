@@ -216,13 +216,8 @@
 
 
 # DLE 11.3 sources
-/engine/ajax/commentssubscribe.php
-/engine/ajax/twofactor.php
-/engine/classes/htmlpurifier/*
 /engine/classes/memcache.class.php
-/engine/inc/lostpassword.php
 /engine/inc/redirects.php
-/engine/inc/twofactor.php
 
 # DLE 12 sources
 /engine/inc/metatags.php
@@ -269,5 +264,7 @@
 /engine/inc/upgrade/9.7.php
 /engine/inc/upgrade/9.8.php
 
-# Place your custom files here
-!/templates/Default/uniform
+# DLE 14.1 sources
+/engine/inc/upgrade/
+/engine/classes/tinify/
+/engine/inc/timeout.php

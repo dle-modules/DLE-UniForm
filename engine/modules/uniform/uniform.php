@@ -24,10 +24,10 @@ if (!defined('DATALIFEENGINE')) {
  */
 
 // Подключаем конфиг модуля
-include ENGINE_DIR . '/modules/uniform/cfg.php';
+include (DLEPlugins::Check(ENGINE_DIR . '/modules/uniform/cfg.php'));
 
 // Подключаем функции модуля
-include ENGINE_DIR . '/modules/uniform/functions.php';
+include (DLEPlugins::Check(ENGINE_DIR . '/modules/uniform/functions.php'));
 
 // Имя кеша
 /** @var array $cfg */
@@ -51,13 +51,8 @@ if (!$cfg['nocache'] && !$isPost) {
 	$uniform = dle_cache($cfg['role'], $cacheName . $config['skin'], true);
 }
 if (!$uniform) {
-	// Совместимость с DLE 13.x
-	if (file_exists(ENGINE_DIR . '/classes/plugins.class.php')) {
-		require_once ENGINE_DIR . '/classes/plugins.class.php';
-	}
-
 	if (!defined('TEMPLATE_DIR')) {
-		require_once ENGINE_DIR . '/classes/templates.class.php';
+		require_once (DLEPlugins::Check(ENGINE_DIR . '/classes/templates.class.php'));
 		$tpl      = new dle_template();
 		$tpl->dir = $template_dir;
 		define('TEMPLATE_DIR', $tpl->dir);
@@ -97,7 +92,7 @@ if (!$uniform) {
 			}
 
 			// Если данные передаются постом — надо бы их обработать
-			require_once ENGINE_DIR . '/classes/parse.class.php';
+			require_once (DLEPlugins::Check(ENGINE_DIR . '/classes/parse.class.php'));
 			$parse = new ParseFilter();
 
 			if (!checkToken($_POST['csrfToken'], $cacheName . $config['skin'] . $sessionId)) {
@@ -297,7 +292,7 @@ if (!$uniform) {
 
 				$arMails = getArray($cfg['emails']);
 				if ($cfg['sendmail'] && count($arMails) > 0) {
-					include ENGINE_DIR . '/modules/uniform/sendmail.php';
+					include (DLEPlugins::Check(ENGINE_DIR . '/modules/uniform/sendmail.php'));
 
 					if ($debug) {
 						$debugTag .= '<pre class="uf-pre"><h4>arSendMail:</h4>';
@@ -379,7 +374,7 @@ $maxFileSize        = ($cfg['maxFileSize'] > 0) ? $cfg['maxFileSize'] : 0;
 
 
 $form = '
-	<form action="/engine/ajax/uniform/uniform.php" data-uf-form method="POST" ' . $multipart . '>
+	<form action="/engine/ajax/controller.php?mod=uniform" data-uf-form method="POST" ' . $multipart . '>
 	<input type="hidden" name="csrfToken" value="' . getToken($cacheName . $config['skin'] . $sessionId) . '">
 	<input type="hidden" name="formConfig" value="' . $cfg['formConfig'] . '">
 ';

@@ -14,13 +14,13 @@ if (!defined('DATALIFEENGINE')) {
 /**
  * Информация из DLE, доступная в модуле
  *
- * @global boolean $is_logged  Является ли посетитель авторизованным пользователем или гостем.
- * @global array   $member_id  Массив с информацией о авторизованном пользователе, включая всю его информацию из
+ * @global boolean $is_logged Является ли посетитель авторизованным пользователем или гостем.
+ * @global array $member_id Массив с информацией о авторизованном пользователе, включая всю его информацию из
  *         профиля.
- * @global object  $db         Класс DLE для работы с базой данных.
- * @global array   $config     Информация обо всех настройках скрипта.
- * @global array   $user_group Информация о всех группах пользователей и их настройках.
- * @global integer $_TIME      Содержит текущее время в UNIX формате с учетом настроек смещения в настройках скрипта.
+ * @global object $db Класс DLE для работы с базой данных.
+ * @global array $config Информация обо всех настройках скрипта.
+ * @global array $user_group Информация о всех группах пользователей и их настройках.
+ * @global integer $_TIME Содержит текущее время в UNIX формате с учетом настроек смещения в настройках скрипта.
  */
 
 $user_group = get_vars('usergroup');
@@ -28,7 +28,7 @@ $user_group = get_vars('usergroup');
 if (!$user_group) {
 	$user_group = [];
 
-	$db->query("SELECT * FROM " . USERPREFIX . "_usergroups ORDER BY id ASC");
+	$db->query("SELECT * FROM ".USERPREFIX."_usergroups ORDER BY id ASC");
 
 	while ($row = $db->get_row()) {
 
@@ -48,7 +48,7 @@ $mailTpl                        = new dle_template();
 $mailTpl->dir                   = TEMPLATE_DIR;
 $mailTpl->result['uniformMail'] = '';
 /** @var array $cfg */
-$mailTpl->load_template('/uniform/' . $cfg['templateFolder'] . '/email.tpl');
+$mailTpl->load_template('/uniform/'.$cfg['templateFolder'].'/email.tpl');
 
 // Собираем все теги шаблона в массив
 $arTplTags     = [];
@@ -87,16 +87,17 @@ if ($member_id['user_group'] == 5) {
 	$arSendMail['user_logged_ip']  = '';
 	$arSendMail['user_timezone']   = '';
 } else {
-	$userRow = $db->super_query("SELECT * FROM " . USERPREFIX . "_users WHERE name = '{$member_id['name']}'");
+	$userRow = $db->super_query("SELECT * FROM ".USERPREFIX."_users WHERE name = '{$member_id['name']}'");
 
 	if ($userRow['user_id'] > 0) {
 
 		if (count(explode('@', $userRow['foto'])) == 2) {
-			$userPhoto = '//www.gravatar.com/avatar/' . md5(trim($userRow['foto'])) . '?s=' . intval($user_group[$userRow['user_group']]['max_foto']);
+			$userPhoto = '//www.gravatar.com/avatar/'.md5(trim($userRow['foto'])).'?s='
+				.intval($user_group[$userRow['user_group']]['max_foto']);
 		} else {
 			if ($userRow['foto']) {
 				if (strpos($userRow['foto'], '//') === 0) {
-					$avatar = 'http:' . $userRow['foto'];
+					$avatar = 'http:'.$userRow['foto'];
 				} else {
 					$avatar = $userRow['foto'];
 				}
@@ -104,10 +105,10 @@ if ($member_id['user_group'] == 5) {
 				if ($avatar['host']) {
 					$userPhoto = $userRow['foto'];
 				} else {
-					$userPhoto = $config['http_home_url'] . 'uploads/fotos/' . $userRow['foto'];
+					$userPhoto = $config['http_home_url'].'uploads/fotos/'.$userRow['foto'];
 				}
 			} else {
-				$userPhoto = $config['http_home_url'] . 'templates/' . $config['skin'] . '/dleimages/noavatar.png';
+				$userPhoto = $config['http_home_url'].'templates/'.$config['skin'].'/dleimages/noavatar.png';
 			}
 		}
 
@@ -134,7 +135,9 @@ if ($member_id['user_group'] == 5) {
 
 
 		// Выводим данные из допполей пользователя
-		if (strpos($mailTpl->copy_template, 'user_xfield_') !== false || strpos($mailTpl->copy_template, 'all_mail_fields') !== false) {
+		if (strpos($mailTpl->copy_template, 'user_xfield_') !== false
+			|| strpos($mailTpl->copy_template, 'all_mail_fields') !== false
+		) {
 
 			$xfields     = xfieldsload(true);
 			$xfieldsdata = xfieldsdataload($userRow['xfields']);
@@ -144,12 +147,12 @@ if ($member_id['user_group'] == 5) {
 
 				if ($value[5] != 1) {
 					if (empty($xfieldsdata[$value[0]])) {
-						$arSendMail['user_xfield_' . $userXfName] = '';
+						$arSendMail['user_xfield_'.$userXfName] = '';
 					} else {
-						$arSendMail['user_xfield_' . $userXfName] = $xfieldsdata[$value[0]];
+						$arSendMail['user_xfield_'.$userXfName] = $xfieldsdata[$value[0]];
 					}
 				} else {
-					$arSendMail['user_xfield_' . $userXfName] = '';
+					$arSendMail['user_xfield_'.$userXfName] = '';
 				}
 			}
 		}
@@ -163,19 +166,19 @@ foreach ($arSendMail as $tag => $value) {
 	if (!$cfg['sendAsPlain']) {
 		$value = str_replace(["\r", "\n"], ['', '<br>'], $value);
 	}
-	$arTplTags['{' . $tag . '}'] = $value;
+	$arTplTags['{'.$tag.'}'] = $value;
 
 	if (isset($value) && $value != '') {
-		$mailTpl->set('[' . $tag . ']', '');
-		$mailTpl->set('[/' . $tag . ']', '');
+		$mailTpl->set('['.$tag.']', '');
+		$mailTpl->set('[/'.$tag.']', '');
 		$mailTpl->set_block("'\\[not_{$tag}\\](.*?)\\[/not_{$tag}\\]'si", '');
 	} else {
-		$mailTpl->set('[not_' . $tag . ']', '');
-		$mailTpl->set('[/not_' . $tag . ']', '');
+		$mailTpl->set('[not_'.$tag.']', '');
+		$mailTpl->set('[/not_'.$tag.']', '');
 		$mailTpl->set_block("'\\[{$tag}\\](.*?)\\[/{$tag}\\]'si", '');
 	}
-	$allMailFields .= '[' . $tag . ']{' . $tag . '}[/' . $tag . ']<br>';
-	$allMailFields .= '[not_' . $tag . '] ' . $tag . ' is empty [/not_' . $tag . ']<br>';
+	$allMailFields .= '['.$tag.']{'.$tag.'}[/'.$tag.']<br>';
+	$allMailFields .= '[not_'.$tag.'] '.$tag.' is empty [/not_'.$tag.']<br>';
 }
 
 
@@ -189,7 +192,8 @@ $mailTpl->set('{current_page}', $_SERVER['HTTP_REFERER']);
 // Определяем заголовок письма
 preg_match("'\\[header\\](.*?)\\[\\/header\\]'si", $mailTpl->copy_template, $mailHeader);
 // Если передано поле header — подставим его в header :)
-$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header']) : trim($mailHeader[1]);
+$emailHeader = (isset($arSendMail['header']) && $arSendMail['header'] != '') ? trim($arSendMail['header'])
+	: trim($mailHeader[1]);
 $emailHeader = stripslashes($emailHeader);
 
 // Обрабатываем теги шаблона
@@ -199,7 +203,7 @@ $mailTpl->set('{all_mail_fields}', $allMailFields);
 
 // Подключаем дополнительный модуль, если это указано в конфиге
 if ($cfg['parseSendMail']) {
-	include ENGINE_DIR . '/modules/' . $cfg['parseSendMail'] . '.php';
+	include(DLEPlugins::Check(ENGINE_DIR.'/modules/'.$cfg['parseSendMail'].'.php'));
 }
 
 // Компилим шаблон
@@ -221,7 +225,7 @@ if (!$cfg['sendAsPlain']) {
 $message = stripslashes($message);
 
 // Подключаем класс для отправки почты.
-include_once ENGINE_DIR . '/classes/mail.class.php';
+include_once(DLEPlugins::Check(ENGINE_DIR.'/classes/mail.class.php'));
 $asHtml = ($cfg['sendAsPlain']) ? false : true;
 $mail   = new dle_mail($config, $asHtml);
 
